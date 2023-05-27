@@ -40,7 +40,7 @@ public class CustomerController {
     public ResponseEntity<Customer> updateCustomerById(@PathVariable("id") UUID id, @RequestBody Customer customer) {
         Customer updateCustomer = customerService.updateCustomerById(id, customer);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "api/v1/customer" + updateCustomer.getId().toString());
+        headers.add("Location", "api/v1/customer/" + updateCustomer.getId().toString());
         return new ResponseEntity<>(headers, HttpStatus.OK);
     }
 

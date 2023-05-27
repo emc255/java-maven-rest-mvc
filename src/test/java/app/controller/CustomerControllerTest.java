@@ -17,8 +17,7 @@ import java.util.List;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -57,7 +56,8 @@ class CustomerControllerTest {
     void getCustomerById() throws Exception {
         Customer testCustomer = customerServiceImpl.customerList().get(0);
         given(customerService.getCustomerById(testCustomer.getId())).willReturn(testCustomer);
-        mockMvc.perform(get("/api/v1/customer/" + testCustomer.getId()).accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/v1/customer/" + testCustomer.getId())
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.name", is(testCustomer.getName())));
@@ -81,7 +81,18 @@ class CustomerControllerTest {
     }
 
     @Test
-    void updateCustomerById() {
+    void updateCustomerById() throws Exception {
+        Customer testCustomer = customerServiceImpl.customerList().get(0);
+        testCustomer.setName("AII");
+        given(customerService.updateCustomerById(testCustomer.getId(), testCustomer)).willReturn(testCustomer);
+
+        mockMvc.perform(put("/api/v1/customer/" + testCustomer.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(testCustomer)))
+                .andExpect(status().isOk())
+                .andExpect(header().exists("Location"));
+
     }
 
     @Test
@@ -92,5 +103,5 @@ class CustomerControllerTest {
     void deleteCustomerById() {
     }
 
-   
+
 }
