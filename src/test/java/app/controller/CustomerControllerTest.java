@@ -1,8 +1,8 @@
 package app.controller;
 
-import app.model.Beer;
-import app.service.BeerService;
-import app.service.BeerServiceImpl;
+import app.model.Customer;
+import app.service.CustomerService;
+import app.service.CustomerServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,30 +22,31 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-@WebMvcTest(BeerController.class)
-class BeerControllerTest {
+@WebMvcTest(CustomerController.class)
+class CustomerControllerTest {
 
     @Autowired
     MockMvc mockMvc;
+
     @Autowired
     ObjectMapper objectMapper;
 
     @MockBean
-    BeerService beerService;
+    CustomerService customerService;
 
-    BeerServiceImpl beerServiceImpl;
+    CustomerServiceImpl customerServiceImpl;
 
     @BeforeEach
     void setUp() {
-        beerServiceImpl = new BeerServiceImpl();
+        customerServiceImpl = new CustomerServiceImpl();
     }
 
     @Test
-    void beerList() throws Exception {
-        List<Beer> testBeerList = beerServiceImpl.beerList();
-        given(beerService.beerList()).willReturn(testBeerList);
+    void customerList() throws Exception {
+        List<Customer> testCustomerList = customerServiceImpl.customerList();
+        given(customerService.customerList()).willReturn(testCustomerList);
 
-        mockMvc.perform(get("/api/v1/beer").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/v1/customer").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.length()", is(3)));
@@ -53,32 +54,43 @@ class BeerControllerTest {
     }
 
     @Test
-    void getBeerById() throws Exception {
-        Beer testBeer = beerServiceImpl.beerList().get(0);
-        given(beerService.getBeerById(testBeer.getId()))
-                .willReturn(testBeer);
-
-        mockMvc.perform(get("/api/v1/beer/" + testBeer.getId())
-                        .accept(MediaType.APPLICATION_JSON))
+    void getCustomerById() throws Exception {
+        Customer testCustomer = customerServiceImpl.customerList().get(0);
+        given(customerService.getCustomerById(testCustomer.getId())).willReturn(testCustomer);
+        mockMvc.perform(get("/api/v1/customer/" + testCustomer.getId()).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", is(testBeer.getId().toString())))
-                .andExpect(jsonPath("$.beerName", is(testBeer.getBeerName())));
+                .andExpect(jsonPath("$.name", is(testCustomer.getName())));
     }
 
     @Test
-    public void addBeer() throws Exception {
-        Beer beer = beerServiceImpl.beerList().get(0);
-        beer.setId(null);
-        beer.setVersion(null);
+    void addCustomer() throws Exception {
+        Customer customer = customerServiceImpl.customerList().get(0);
+        customer.setId(null);
+        customer.setVersion(null);
 
-        given(beerService.addBeer(any(Beer.class))).willReturn(beerServiceImpl.beerList().get(1));
+        given(customerService.addCustomer(any(Customer.class))).willReturn(customerServiceImpl.customerList().get(1));
 
-        mockMvc.perform(post("/api/v1/beer/add")
+        mockMvc.perform(post("/api/v1/customer/add")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(beer)))
+                        .content(objectMapper.writeValueAsString(customer)))
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"));
+
     }
+
+    @Test
+    void updateCustomerById() {
+    }
+
+    @Test
+    void patchCustomerById() {
+    }
+
+    @Test
+    void deleteCustomerById() {
+    }
+
+   
 }

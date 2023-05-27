@@ -1,8 +1,9 @@
 package app.controller;
 
+import app.model.Beer;
 import app.model.Customer;
 import app.service.CustomerService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +14,11 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/customer")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CustomerController {
     private final CustomerService customerService;
 
-    @GetMapping("/list")
+    @GetMapping({"", "/"})
     public List<Customer> customerList() {
         return customerService.customerList();
     }
@@ -41,5 +42,17 @@ public class CustomerController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", "api/v1/customer" + updateCustomer.getId().toString());
         return new ResponseEntity<>(headers, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Beer> patchCustomerById(@PathVariable("id") UUID id, @RequestBody Customer customer) {
+        customerService.patchCustomerById(id, customer);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Beer> deleteCustomerById(@PathVariable("id") UUID id) {
+        customerService.deleteCustomerById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
