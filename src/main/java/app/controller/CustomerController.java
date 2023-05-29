@@ -1,8 +1,8 @@
 package app.controller;
 
 import app.exception.NotFoundException;
-import app.model.Customer;
-import app.model.Dog;
+import app.model.CustomerDTO;
+import app.model.DogDTO;
 import app.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -23,39 +23,39 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @GetMapping({CUSTOMER_PATH, CUSTOMER_PATH + "/"})
-    public List<Customer> customerList() {
+    public List<CustomerDTO> customerList() {
         return customerService.customerList();
     }
 
     @GetMapping(CUSTOMER_PATH_ID)
-    public Customer getCustomerById(@PathVariable("id") UUID id) {
+    public CustomerDTO getCustomerById(@PathVariable("id") UUID id) {
         return customerService.getCustomerById(id).orElseThrow(NotFoundException::new);
     }
 
     @PostMapping(CUSTOMER_PATH_ADD)
-    public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer) {
-        Customer savedCustomer = customerService.addCustomer(customer);
+    public ResponseEntity<CustomerDTO> addCustomer(@RequestBody CustomerDTO customer) {
+        CustomerDTO savedCustomer = customerService.addCustomer(customer);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "api/v1/customer/" + savedCustomer.getId().toString());
+        headers.add("Location", CUSTOMER_PATH + "/" + savedCustomer.getId().toString());
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
     @PutMapping(CUSTOMER_PATH_ID)
-    public ResponseEntity<Customer> updateCustomerById(@PathVariable("id") UUID id, @RequestBody Customer customer) {
-        Customer updateCustomer = customerService.updateCustomerById(id, customer);
+    public ResponseEntity<CustomerDTO> updateCustomerById(@PathVariable("id") UUID id, @RequestBody CustomerDTO customer) {
+        CustomerDTO updateCustomer = customerService.updateCustomerById(id, customer);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "api/v1/customer/" + updateCustomer.getId().toString());
+        headers.add("Location", CUSTOMER_PATH + "/" + updateCustomer.getId().toString());
         return new ResponseEntity<>(headers, HttpStatus.OK);
     }
 
     @PatchMapping(CUSTOMER_PATH_ID)
-    public ResponseEntity<Dog> patchCustomerById(@PathVariable("id") UUID id, @RequestBody Customer customer) {
+    public ResponseEntity<DogDTO> patchCustomerById(@PathVariable("id") UUID id, @RequestBody CustomerDTO customer) {
         customerService.patchCustomerById(id, customer);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping(CUSTOMER_PATH_ID)
-    public ResponseEntity<Dog> deleteCustomerById(@PathVariable("id") UUID id) {
+    public ResponseEntity<DogDTO> deleteCustomerById(@PathVariable("id") UUID id) {
         customerService.deleteCustomerById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

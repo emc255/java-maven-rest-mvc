@@ -1,21 +1,21 @@
 package app.service;
 
-import app.model.Customer;
+import app.model.CustomerDTO;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface CustomerService {
-    List<Customer> customerList();
+    List<CustomerDTO> customerList();
 
-    Optional<Customer> getCustomerById(UUID id);
+    Optional<CustomerDTO> getCustomerById(UUID id);
 
-    Customer addCustomer(Customer customer);
+    CustomerDTO addCustomer(CustomerDTO customer);
 
-    Customer updateCustomerById(UUID id, Customer customer);
+    CustomerDTO updateCustomerById(UUID id, CustomerDTO customer);
 
     void deleteCustomerById(UUID id);
 
-    void patchCustomerById(UUID id, Customer customer);
+    void patchCustomerById(UUID id, CustomerDTO customer);
 }

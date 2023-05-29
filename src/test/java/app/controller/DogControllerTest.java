@@ -1,6 +1,6 @@
 package app.controller;
 
-import app.model.Dog;
+import app.model.DogDTO;
 import app.service.DogService;
 import app.service.DogServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,7 +39,7 @@ class DogControllerTest {
     @Captor
     ArgumentCaptor<UUID> uuidArgumentCaptor;
     @Captor
-    ArgumentCaptor<Dog> dogArgumentCaptor;
+    ArgumentCaptor<DogDTO> dogArgumentCaptor;
 
     DogServiceImpl dogServiceImpl;
 
@@ -50,8 +50,8 @@ class DogControllerTest {
 
     @Test
     void dogList() throws Exception {
-        List<Dog> testDogList = dogServiceImpl.dogList();
-        given(dogService.dogList()).willReturn(testDogList);
+        List<DogDTO> testDogListDTO = dogServiceImpl.dogList();
+        given(dogService.dogList()).willReturn(testDogListDTO);
 
         mockMvc.perform(get(DogController.DOG_PATH).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -61,7 +61,7 @@ class DogControllerTest {
 
     @Test
     void getDogById() throws Exception {
-        Dog testDog = dogServiceImpl.dogList().get(0);
+        DogDTO testDog = dogServiceImpl.dogList().get(0);
         given(dogService.getDogById(testDog.getId()))
                 .willReturn(Optional.of(testDog));
 
@@ -76,7 +76,7 @@ class DogControllerTest {
 
     @Test
     public void addDog() throws Exception {
-        Dog dog = dogServiceImpl.dogList().get(0);
+        DogDTO dog = dogServiceImpl.dogList().get(0);
         dog.setId(null);
         dog.setVersion(null);
 
@@ -92,7 +92,7 @@ class DogControllerTest {
 
     @Test
     public void updateDogById() throws Exception {
-        Dog testDog = dogServiceImpl.dogList().get(0);
+        DogDTO testDog = dogServiceImpl.dogList().get(0);
 
         mockMvc.perform(put(DogController.DOG_PATH_ID, testDog.getId())
                         .accept(MediaType.APPLICATION_JSON)
@@ -106,7 +106,7 @@ class DogControllerTest {
 
     @Test
     void patchDogById() throws Exception {
-        Dog testDog = dogServiceImpl.dogList().get(0);
+        DogDTO testDog = dogServiceImpl.dogList().get(0);
         Map<String, Object> dogMap = new HashMap<>();
         dogMap.put("name", "new Name");
         mockMvc.perform(patch(DogController.DOG_PATH_ID, testDog.getId())
@@ -122,7 +122,7 @@ class DogControllerTest {
 
     @Test
     void deleteDogById() throws Exception {
-        Dog testDog = dogServiceImpl.dogList().get(0);
+        DogDTO testDog = dogServiceImpl.dogList().get(0);
 
         mockMvc.perform(delete(DogController.DOG_PATH_ID, testDog.getId())
                         .accept(MediaType.APPLICATION_JSON))

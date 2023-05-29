@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class Dog {
+public class DogDTO {
 
     private UUID id;
     private Integer version;

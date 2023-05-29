@@ -1,21 +1,21 @@
 package app.service;
 
-import app.model.Dog;
+import app.model.DogDTO;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface DogService {
-    List<Dog> dogList();
+    List<DogDTO> dogList();
 
-    Optional<Dog> getDogById(UUID id);
+    Optional<DogDTO> getDogById(UUID id);
 
-    Dog addDog(Dog beer);
+    DogDTO addDog(DogDTO dog);
 
-    void updateDogById(UUID id, Dog beer);
+    void updateDogById(UUID id, DogDTO dog);
 
     void deleteDogById(UUID id);
 
-    void patchDogById(UUID id, Dog beer);
+    void patchDogById(UUID id, DogDTO dog);
 }

@@ -1,7 +1,7 @@
 package app.service;
 
-import app.model.Dog;
 import app.model.DogBreed;
+import app.model.DogDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -12,12 +12,12 @@ import java.util.*;
 @Service
 @Slf4j
 public class DogServiceImpl implements DogService {
-    private final Map<UUID, Dog> data;
+    private final Map<UUID, DogDTO> data;
 
     public DogServiceImpl() {
         this.data = new HashMap<>();
 
-        Dog dog1 = Dog.builder()
+        DogDTO dog1 = DogDTO.builder()
                 .id(UUID.randomUUID())
                 .version(1)
                 .name("Whitey")
@@ -29,7 +29,7 @@ public class DogServiceImpl implements DogService {
                 .updateDate(LocalDateTime.now())
                 .build();
 
-        Dog dog2 = Dog.builder()
+        DogDTO dog2 = DogDTO.builder()
                 .id(UUID.randomUUID())
                 .version(1)
                 .name("Blacky")
@@ -41,7 +41,7 @@ public class DogServiceImpl implements DogService {
                 .updateDate(LocalDateTime.now())
                 .build();
 
-        Dog dog3 = Dog.builder()
+        DogDTO dog3 = DogDTO.builder()
                 .id(UUID.randomUUID())
                 .version(1)
                 .name("Browny")
@@ -59,12 +59,12 @@ public class DogServiceImpl implements DogService {
     }
 
     @Override
-    public List<Dog> dogList() {
+    public List<DogDTO> dogList() {
         return new ArrayList<>(data.values());
     }
 
     @Override
-    public Optional<Dog> getDogById(UUID id) {
+    public Optional<DogDTO> getDogById(UUID id) {
 
         log.debug("Get Beer by Id - in service. Id: " + id.toString());
 
@@ -72,8 +72,8 @@ public class DogServiceImpl implements DogService {
     }
 
     @Override
-    public Dog addDog(Dog dog) {
-        Dog savedDog = Dog.builder()
+    public DogDTO addDog(DogDTO dog) {
+        DogDTO savedDog = DogDTO.builder()
                 .id(UUID.randomUUID())
                 .version(1)
                 .name(dog.getName())
@@ -91,8 +91,8 @@ public class DogServiceImpl implements DogService {
     }
 
     @Override
-    public void updateDogById(UUID id, Dog dog) {
-        Dog updateDod = data.get(id);
+    public void updateDogById(UUID id, DogDTO dog) {
+        DogDTO updateDod = data.get(id);
         updateDod.setName(dog.getName());
         updateDod.setDogBreed(dog.getDogBreed());
         updateDod.setQuantityOnHand(dog.getQuantityOnHand());
@@ -101,12 +101,12 @@ public class DogServiceImpl implements DogService {
     }
 
     @Override
-    public void patchDogById(UUID id, Dog beer) {
-        Dog updateDod = data.get(id);
-        if (beer.getName() != null) updateDod.setName(beer.getName());
-        if (beer.getDogBreed() != null) updateDod.setDogBreed(beer.getDogBreed());
-        if (beer.getQuantityOnHand() != null) updateDod.setQuantityOnHand(beer.getQuantityOnHand());
-        if (beer.getPrice() != null) updateDod.setPrice(beer.getPrice());
+    public void patchDogById(UUID id, DogDTO dog) {
+        DogDTO updateDod = data.get(id);
+        if (dog.getName() != null) updateDod.setName(dog.getName());
+        if (dog.getDogBreed() != null) updateDod.setDogBreed(dog.getDogBreed());
+        if (dog.getQuantityOnHand() != null) updateDod.setQuantityOnHand(dog.getQuantityOnHand());
+        if (dog.getPrice() != null) updateDod.setPrice(dog.getPrice());
         updateDod.setUpdateDate(LocalDateTime.now());
     }
 
