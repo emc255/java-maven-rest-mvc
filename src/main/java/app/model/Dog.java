@@ -9,12 +9,12 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class Beer {
+public class Dog {
 
     private UUID id;
     private Integer version;
-    private String beerName;
-    private BeerStyle beerStyle;
+    private String name;
+    private DogBreed dogBreed;
     private String upc;
     private Integer quantityOnHand;
     private BigDecimal price;

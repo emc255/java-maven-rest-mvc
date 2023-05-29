@@ -1,8 +1,8 @@
 package app.controller;
 
 import app.exception.NotFoundException;
-import app.model.Beer;
 import app.model.Customer;
+import app.model.Dog;
 import app.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -49,13 +49,13 @@ public class CustomerController {
     }
 
     @PatchMapping(CUSTOMER_PATH_ID)
-    public ResponseEntity<Beer> patchCustomerById(@PathVariable("id") UUID id, @RequestBody Customer customer) {
+    public ResponseEntity<Dog> patchCustomerById(@PathVariable("id") UUID id, @RequestBody Customer customer) {
         customerService.patchCustomerById(id, customer);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping(CUSTOMER_PATH_ID)
-    public ResponseEntity<Beer> deleteCustomerById(@PathVariable("id") UUID id) {
+    public ResponseEntity<Dog> deleteCustomerById(@PathVariable("id") UUID id) {
         customerService.deleteCustomerById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
