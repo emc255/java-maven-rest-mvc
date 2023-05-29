@@ -1,5 +1,6 @@
 package app.controller;
 
+import app.exception.NotFoundException;
 import app.model.Beer;
 import app.model.Customer;
 import app.service.CustomerService;
@@ -28,7 +29,7 @@ public class CustomerController {
 
     @GetMapping(CUSTOMER_PATH_ID)
     public Customer getCustomerById(@PathVariable("id") UUID id) {
-        return customerService.getCustomerById(id);
+        return customerService.getCustomerById(id).orElseThrow(NotFoundException::new);
     }
 
     @PostMapping(CUSTOMER_PATH_ADD)

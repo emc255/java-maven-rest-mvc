@@ -1,5 +1,6 @@
 package app.controller;
 
+import app.exception.NotFoundException;
 import app.model.Beer;
 import app.service.BeerService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class BeerController {
 
     @GetMapping(BEER_PATH_ID)
     public Beer getBeerById(@PathVariable("id") UUID id) {
-        return beerService.getBeerById(id);
+        return beerService.getBeerById(id).orElseThrow(NotFoundException::new);
     }
 
     @PostMapping(BEER_PATH_ADD)
@@ -55,4 +56,5 @@ public class BeerController {
         beerService.deleteBeerById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 }
