@@ -13,22 +13,25 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/customer")
+@RequestMapping()
 @RequiredArgsConstructor
 public class CustomerController {
+    public static final String CUSTOMER_PATH = "/api/v1/customer";
+    public static final String CUSTOMER_PATH_ID = CUSTOMER_PATH + "/{id}";
+    public static final String CUSTOMER_PATH_ADD = CUSTOMER_PATH + "/add";
     private final CustomerService customerService;
 
-    @GetMapping({"", "/"})
+    @GetMapping({CUSTOMER_PATH, CUSTOMER_PATH + "/"})
     public List<Customer> customerList() {
         return customerService.customerList();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(CUSTOMER_PATH_ID)
     public Customer getCustomerById(@PathVariable("id") UUID id) {
         return customerService.getCustomerById(id);
     }
 
-    @PostMapping("/add")
+    @PostMapping(CUSTOMER_PATH_ADD)
     public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer) {
         Customer savedCustomer = customerService.addCustomer(customer);
         HttpHeaders headers = new HttpHeaders();
@@ -36,7 +39,7 @@ public class CustomerController {
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(CUSTOMER_PATH_ID)
     public ResponseEntity<Customer> updateCustomerById(@PathVariable("id") UUID id, @RequestBody Customer customer) {
         Customer updateCustomer = customerService.updateCustomerById(id, customer);
         HttpHeaders headers = new HttpHeaders();
@@ -44,13 +47,13 @@ public class CustomerController {
         return new ResponseEntity<>(headers, HttpStatus.OK);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping(CUSTOMER_PATH_ID)
     public ResponseEntity<Beer> patchCustomerById(@PathVariable("id") UUID id, @RequestBody Customer customer) {
         customerService.patchCustomerById(id, customer);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(CUSTOMER_PATH_ID)
     public ResponseEntity<Beer> deleteCustomerById(@PathVariable("id") UUID id) {
         customerService.deleteCustomerById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
