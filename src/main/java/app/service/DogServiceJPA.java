@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DogServiceJPA implements DogService {
     private final DogRepository dogRepository;
-    private DogMapper dogMapper;
+    private final DogMapper dogMapper;
 
     @Override
     public List<DogDTO> dogList() {

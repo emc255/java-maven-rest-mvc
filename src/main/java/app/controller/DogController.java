@@ -22,7 +22,7 @@ public class DogController {
     private final DogService dogService;
 
     @GetMapping({DOG_PATH, DOG_PATH + "/"})
-    public List<DogDTO> beerList() {
+    public List<DogDTO> dogList() {
         return dogService.dogList();
     }
 
