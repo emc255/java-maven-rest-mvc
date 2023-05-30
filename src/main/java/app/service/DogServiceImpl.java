@@ -2,6 +2,7 @@ package app.service;
 
 import app.model.DogBreed;
 import app.model.DogDTO;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -9,10 +10,14 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
-@Service
+
 @Slf4j
+@Service
+
+@AllArgsConstructor
 public class DogServiceImpl implements DogService {
     private final Map<UUID, DogDTO> data;
+
 
     public DogServiceImpl() {
         this.data = new HashMap<>();
@@ -61,6 +66,7 @@ public class DogServiceImpl implements DogService {
     @Override
     public List<DogDTO> dogList() {
         return new ArrayList<>(data.values());
+
     }
 
     @Override
