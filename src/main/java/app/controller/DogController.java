@@ -32,8 +32,8 @@ public class DogController {
     }
 
     @PostMapping(DOG_PATH_ADD)
-    public ResponseEntity<DogDTO> addDog(@RequestBody DogDTO dog) {
-        DogDTO savedDog = dogService.addDog(dog);
+    public ResponseEntity<DogDTO> addDog(@RequestBody DogDTO dogDTO) {
+        DogDTO savedDog = dogService.addDog(dogDTO);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", DOG_PATH + "/" + savedDog.getId().toString());
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
@@ -46,8 +46,8 @@ public class DogController {
     }
 
     @PatchMapping(DOG_PATH_ID)
-    public ResponseEntity<DogDTO> patchDogById(@PathVariable("id") UUID id, @RequestBody DogDTO dog) {
-        dogService.patchDogById(id, dog);
+    public ResponseEntity<DogDTO> patchDogById(@PathVariable("id") UUID id, @RequestBody DogDTO dogDTO) {
+        dogService.patchDogById(id, dogDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

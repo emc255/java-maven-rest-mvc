@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 
 @Mapper
 public interface DogMapper {
-    Dog convertCustomerDTOToDog(DogDTO dto);
+    Dog convertDogDTOToDog(DogDTO dogDTO);
 
-    DogDTO convertDogToDogDTO(Dog dog);
+    DogDTO convertDogToDogDTO(Dog dogDTO);
 }
