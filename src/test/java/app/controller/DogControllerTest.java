@@ -116,6 +116,18 @@ class DogControllerTest {
 
 
     @Test
+    void testDeleteDogById() throws Exception {
+        DogDTO testDog = dogServiceImpl.dogList().get(0);
+
+        mockMvc.perform(delete(DogController.DOG_PATH_ID, testDog.getId())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        verify(dogService).deleteDogById(uuidArgumentCaptor.capture());
+        assertThat(testDog.getId()).isEqualTo(uuidArgumentCaptor.getValue());
+    }
+
+    @Test
     void testPatchDogById() throws Exception {
         DogDTO testDog = dogServiceImpl.dogList().get(0);
         Map<String, Object> dogMap = new HashMap<>();
@@ -129,18 +141,6 @@ class DogControllerTest {
         verify(dogService).patchDogById(uuidArgumentCaptor.capture(), dogArgumentCaptor.capture());
         assertThat(testDog.getId()).isEqualTo(uuidArgumentCaptor.getValue());
         assertThat(dogMap.get("name")).isEqualTo(dogArgumentCaptor.getValue().getName());
-    }
-
-    @Test
-    void testDeleteDogById() throws Exception {
-        DogDTO testDog = dogServiceImpl.dogList().get(0);
-
-        mockMvc.perform(delete(DogController.DOG_PATH_ID, testDog.getId())
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
-
-        verify(dogService).deleteDogById(uuidArgumentCaptor.capture());
-        assertThat(testDog.getId()).isEqualTo(uuidArgumentCaptor.getValue());
     }
 
 

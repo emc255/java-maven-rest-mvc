@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -41,16 +42,17 @@ public class CustomerController {
 
     @PutMapping(CUSTOMER_PATH_ID)
     public ResponseEntity<CustomerDTO> updateCustomerById(@PathVariable("id") UUID id, @RequestBody CustomerDTO customer) {
-        CustomerDTO updateCustomer = customerService.updateCustomerById(id, customer).orElse(null);
-        if (updateCustomer == null) {
+        Optional<CustomerDTO> updateCustomerDTO = customerService.updateCustomerById(id, customer);
+        if (updateCustomerDTO.isEmpty()) {
             throw new NotFoundException();
         }
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", CUSTOMER_PATH + "/" + updateCustomer.getId().toString());
+        headers.add("Location", CUSTOMER_PATH + "/" + updateCustomerDTO.get().getId().toString());
         return new ResponseEntity<>(headers, HttpStatus.OK);
+
     }
-    
+
     @DeleteMapping(CUSTOMER_PATH_ID)
     public ResponseEntity<CustomerDTO> deleteCustomerById(@PathVariable("id") UUID id) {
         customerService.deleteCustomerById(id);

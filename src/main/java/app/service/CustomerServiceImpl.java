@@ -7,10 +7,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-
 public class CustomerServiceImpl implements CustomerService {
-
-
     private final Map<UUID, CustomerDTO> data = new HashMap<>();
 
     public CustomerServiceImpl() {
@@ -73,7 +70,7 @@ public class CustomerServiceImpl implements CustomerService {
         updatedCustomer.setLastModifiedDate(LocalDateTime.now());
         return Optional.of(updatedCustomer);
     }
-    
+
     @Override
     public void deleteCustomerById(UUID id) {
         data.remove(id);

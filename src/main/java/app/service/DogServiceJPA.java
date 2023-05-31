@@ -46,18 +46,21 @@ public class DogServiceJPA implements DogService {
 
     @Override
     public Optional<DogDTO> updateDogById(UUID id, DogDTO dogDTO) {
-        AtomicReference<Dog> atomicReference = new AtomicReference<>();
-        dogRepository.findById(id).ifPresent(updateDog -> {
+        AtomicReference<Optional<DogDTO>> atomicReference = new AtomicReference<>();
+        dogRepository.findById(id).ifPresentOrElse(updateDog -> {
             updateDog.setName(dogDTO.getName());
             updateDog.setDogBreed(dogDTO.getDogBreed());
             updateDog.setQuantityOnHand(dogDTO.getQuantityOnHand());
             updateDog.setPrice(dogDTO.getPrice());
             updateDog.setUpdateDate(LocalDateTime.now());
-            
-            atomicReference.set(dogRepository.save(updateDog));
+            dogRepository.save(updateDog);
+            DogDTO updateDogDTO = dogMapper.convertDogToDogDTO(updateDog);
+            atomicReference.set(Optional.of(updateDogDTO));
+        }, () -> {
+            atomicReference.set(Optional.empty());
         });
-
-        return Optional.of(dogMapper.convertDogToDogDTO(atomicReference.get()));
+        
+        return atomicReference.get();
     }
 
     @Override

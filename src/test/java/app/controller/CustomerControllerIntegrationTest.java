@@ -60,7 +60,7 @@ class CustomerControllerIntegrationTest {
     @Test
     @Transactional
     @Rollback
-    void testCustomerAdd() {
+    void testAddCustomer() {
         CustomerDTO customerDTO = CustomerDTO.builder()
                 .name("Eva")
                 .build();
@@ -77,7 +77,7 @@ class CustomerControllerIntegrationTest {
     }
 
     @Test
-    void testCustomerUpdate() {
+    void testUpdateCustomerById() {
         Customer testCustomer = customerRepository.findAll().get(0);
         CustomerDTO testCustomerDTO = customerMapper.convertCustomerToCustomerDTO(testCustomer);
         testCustomerDTO.setId(null);
@@ -93,9 +93,16 @@ class CustomerControllerIntegrationTest {
     }
 
     @Test
+    void testUpdateCustomerByIdNotFound() {
+        assertThrows(NotFoundException.class, () -> {
+            customerController.updateCustomerById(UUID.randomUUID(), CustomerDTO.builder().build());
+        });
+    }
+
+    @Test
     @Transactional
     @Rollback
-    void testCustomerDelete() {
+    void testDeleteCustomerById() {
         UUID customerId = customerRepository.findAll().get(0).getId();
         ResponseEntity<CustomerDTO> responseEntity = customerController.deleteCustomerById(customerId);
 
@@ -106,9 +113,8 @@ class CustomerControllerIntegrationTest {
         assertThat(customerList.size()).isEqualTo(2);
     }
 
-
     @Test
-    void testCustomerPatch() {
+    void testPatchCustomerById() {
         Customer customer = customerRepository.findAll().get(0);
         CustomerDTO testCustomerDTO = customerMapper.convertCustomerToCustomerDTO(customer);
         testCustomerDTO.setId(null);

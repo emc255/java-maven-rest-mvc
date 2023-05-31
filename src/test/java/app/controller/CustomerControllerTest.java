@@ -52,7 +52,7 @@ class CustomerControllerTest {
     }
 
     @Test
-    void customerList() throws Exception {
+    void testCustomerList() throws Exception {
         List<CustomerDTO> testCustomerList = customerServiceImpl.customerList();
         given(customerService.customerList()).willReturn(testCustomerList);
 
@@ -64,7 +64,7 @@ class CustomerControllerTest {
     }
 
     @Test
-    void getCustomerById() throws Exception {
+    void testGetCustomerById() throws Exception {
         CustomerDTO testCustomer = customerServiceImpl.customerList().get(0);
         given(customerService.getCustomerById(testCustomer.getId())).willReturn(Optional.of(testCustomer));
         mockMvc.perform(get(CustomerController.CUSTOMER_PATH_ID, testCustomer.getId())
@@ -75,7 +75,15 @@ class CustomerControllerTest {
     }
 
     @Test
-    void addCustomer() throws Exception {
+    void testGetCustomerByIdNotFound() throws Exception {
+        given(customerService.getCustomerById(any(UUID.class))).willReturn(Optional.empty());
+
+        mockMvc.perform(get(CustomerController.CUSTOMER_PATH_ID, UUID.randomUUID()))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testAddCustomer() throws Exception {
         CustomerDTO customer = customerServiceImpl.customerList().get(0);
         customer.setId(null);
         customer.setVersion(null);
@@ -91,7 +99,7 @@ class CustomerControllerTest {
     }
 
     @Test
-    void updateCustomerById() throws Exception {
+    void testUpdateCustomerById() throws Exception {
         CustomerDTO testCustomer = customerServiceImpl.customerList().get(0);
         testCustomer.setName("AII");
         given(customerService.updateCustomerById(testCustomer.getId(), testCustomer)).willReturn(Optional.of(testCustomer));
@@ -108,7 +116,19 @@ class CustomerControllerTest {
     }
 
     @Test
-    void patchCustomerById() throws Exception {
+    void testDeleteCustomerById() throws Exception {
+        CustomerDTO testCustomer = customerServiceImpl.customerList().get(0);
+
+        mockMvc.perform(delete(CustomerController.CUSTOMER_PATH_ID, testCustomer.getId())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        verify(customerService).deleteCustomerById(uuidArgumentCaptor.capture());
+        assertThat(testCustomer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
+    }
+
+    @Test
+    void testPatchCustomerById() throws Exception {
         CustomerDTO testCustomer = customerServiceImpl.customerList().get(0);
         Map<String, Object> updateCustomer = Map.of("name", "AIAIAI");
 
@@ -122,26 +142,5 @@ class CustomerControllerTest {
         assertThat(testCustomer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
         assertThat(updateCustomer.get("name")).isEqualTo(customerArgumentCaptor.getValue().getName());
     }
-
-    @Test
-    void deleteCustomerById() throws Exception {
-        CustomerDTO testCustomer = customerServiceImpl.customerList().get(0);
-
-        mockMvc.perform(delete(CustomerController.CUSTOMER_PATH_ID, testCustomer.getId())
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
-
-        verify(customerService).deleteCustomerById(uuidArgumentCaptor.capture());
-        assertThat(testCustomer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
-    }
-
-    @Test
-    void getCustomerByIdNotFound() throws Exception {
-        given(customerService.getCustomerById(any(UUID.class))).willReturn(Optional.empty());
-
-        mockMvc.perform(get(CustomerController.CUSTOMER_PATH_ID, UUID.randomUUID()))
-                .andExpect(status().isNotFound());
-    }
-
 
 }

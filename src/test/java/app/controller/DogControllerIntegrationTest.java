@@ -101,6 +101,13 @@ class DogControllerIntegrationTest {
 
     @Test
     void testUpdateDogByIdNotFound() {
+        assertThrows(NotFoundException.class, () -> {
+            dogController.updateDogById(UUID.randomUUID(), DogDTO.builder().build());
+        });
+    }
+
+    @Test
+    void testDeleteDogById() {
 
     }
 }
