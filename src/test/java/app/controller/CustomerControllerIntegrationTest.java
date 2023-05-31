@@ -44,14 +44,14 @@ class CustomerControllerIntegrationTest {
     }
 
     @Test
-    void testCustomerGetById() {
+    void testGetCustomerById() {
         Customer testCustomer = customerRepository.findAll().get(0);
         CustomerDTO testCustomerDTO = customerController.getCustomerById(testCustomer.getId());
         assertThat(testCustomerDTO).isNotNull();
     }
 
     @Test
-    void testCustomerIdNotFound() {
+    void testGetCustomerByIdNotFound() {
         assertThrows(NotFoundException.class, () -> {
             customerController.getCustomerById(UUID.randomUUID());
         });
@@ -77,20 +77,6 @@ class CustomerControllerIntegrationTest {
     }
 
     @Test
-    @Transactional
-    @Rollback
-    void testCustomerDelete() {
-        UUID customerId = customerRepository.findAll().get(0).getId();
-        ResponseEntity<CustomerDTO> responseEntity = customerController.deleteCustomerById(customerId);
-
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
-
-        List<Customer> customerList = customerRepository.findAll();
-        assertThat(customerList).isNotNull();
-        assertThat(customerList.size()).isEqualTo(2);
-    }
-
-    @Test
     void testCustomerUpdate() {
         Customer testCustomer = customerRepository.findAll().get(0);
         CustomerDTO testCustomerDTO = customerMapper.convertCustomerToCustomerDTO(testCustomer);
@@ -105,6 +91,21 @@ class CustomerControllerIntegrationTest {
         assertThat(testUpdateCustomer).isNotNull();
         assertThat(testUpdateCustomer.getName()).isEqualTo("Jessica");
     }
+
+    @Test
+    @Transactional
+    @Rollback
+    void testCustomerDelete() {
+        UUID customerId = customerRepository.findAll().get(0).getId();
+        ResponseEntity<CustomerDTO> responseEntity = customerController.deleteCustomerById(customerId);
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+
+        List<Customer> customerList = customerRepository.findAll();
+        assertThat(customerList).isNotNull();
+        assertThat(customerList.size()).isEqualTo(2);
+    }
+
 
     @Test
     void testCustomerPatch() {

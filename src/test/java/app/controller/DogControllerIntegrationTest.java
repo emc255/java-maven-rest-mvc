@@ -39,21 +39,21 @@ class DogControllerIntegrationTest {
     @Test
     @Transactional
     @Rollback
-    void testEmptyList() {
+    void testDogListEmpty() {
         dogRepository.deleteAll();
         List<DogDTO> testDogList = dogController.dogList();
         assertThat(testDogList.size()).isEqualTo(0);
     }
 
     @Test
-    void getDogById() throws Exception {
+    void testGetDogById() throws Exception {
         Dog testDog = dogRepository.findAll().get(0);
         DogDTO testDogDTO = dogController.getDogById(testDog.getId());
         assertThat(testDogDTO).isNotNull();
     }
 
     @Test
-    void testDogIdNotFound() {
+    void testGetDogByIdNotFound() {
         assertThrows(NotFoundException.class, () -> {
             dogController.getDogById(UUID.randomUUID());
         });
@@ -62,7 +62,7 @@ class DogControllerIntegrationTest {
     @Test
     @Transactional
     @Rollback
-    void testDogAdd() {
+    void testAddDog() {
         DogDTO dogDTO = DogDTO.builder()
                 .name("pika")
                 .dogBreed(DogBreed.GOLDEN_RETRIEVER)
@@ -82,7 +82,7 @@ class DogControllerIntegrationTest {
     }
 
     @Test
-    void testDogUpdate() {
+    void testUpdateDogById() {
         Dog dog = dogRepository.findAll().get(0);
         DogDTO dogDTO = dogMapper.convertDogToDogDTO(dog);
         dogDTO.setId(null);
@@ -97,5 +97,10 @@ class DogControllerIntegrationTest {
         assertThat(testUpdateDog).isNotNull();
         assertThat(testUpdateDog.getName()).isEqualTo("Sukoshi");
         assertThat(testUpdateDog.getDogBreed()).isEqualTo(DogBreed.SHIBA_INU);
+    }
+
+    @Test
+    void testUpdateDogByIdNotFound() {
+
     }
 }

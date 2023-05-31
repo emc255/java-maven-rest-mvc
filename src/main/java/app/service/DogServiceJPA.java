@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,15 +45,19 @@ public class DogServiceJPA implements DogService {
     }
 
     @Override
-    public void updateDogById(UUID id, DogDTO dogDTO) {
+    public Optional<DogDTO> updateDogById(UUID id, DogDTO dogDTO) {
+        AtomicReference<Dog> atomicReference = new AtomicReference<>();
         dogRepository.findById(id).ifPresent(updateDog -> {
             updateDog.setName(dogDTO.getName());
             updateDog.setDogBreed(dogDTO.getDogBreed());
             updateDog.setQuantityOnHand(dogDTO.getQuantityOnHand());
             updateDog.setPrice(dogDTO.getPrice());
             updateDog.setUpdateDate(LocalDateTime.now());
-            dogRepository.save(updateDog);
+            
+            atomicReference.set(dogRepository.save(updateDog));
         });
+
+        return Optional.of(dogMapper.convertDogToDogDTO(atomicReference.get()));
     }
 
     @Override

@@ -49,7 +49,7 @@ class DogControllerTest {
     }
 
     @Test
-    void dogList() throws Exception {
+    void testDogList() throws Exception {
         List<DogDTO> testDogListDTO = dogServiceImpl.dogList();
         given(dogService.dogList()).willReturn(testDogListDTO);
 
@@ -60,7 +60,7 @@ class DogControllerTest {
     }
 
     @Test
-    void getDogById() throws Exception {
+    void testGetDogById() throws Exception {
         DogDTO testDog = dogServiceImpl.dogList().get(0);
         given(dogService.getDogById(testDog.getId()))
                 .willReturn(Optional.of(testDog));
@@ -73,9 +73,17 @@ class DogControllerTest {
                 .andExpect(jsonPath("$.name", is(testDog.getName())));
     }
 
+    @Test
+    void testGetDogByIdNotFound() throws Exception {
+        given(dogService.getDogById(any(UUID.class))).willReturn(Optional.empty());
+
+        mockMvc.perform(get(DogController.DOG_PATH_ID, UUID.randomUUID()))
+                .andExpect(status().isNotFound());
+    }
+
 
     @Test
-    public void addDog() throws Exception {
+    public void testAddDog() throws Exception {
         DogDTO dog = dogServiceImpl.dogList().get(0);
         dog.setId(null);
         dog.setVersion(null);
@@ -91,8 +99,10 @@ class DogControllerTest {
     }
 
     @Test
-    public void updateDogById() throws Exception {
+    public void testUpdateDogById() throws Exception {
         DogDTO testDog = dogServiceImpl.dogList().get(0);
+        testDog.setName("Chocobo");
+        given(dogService.updateDogById(testDog.getId(), testDog)).willReturn(Optional.of(testDog));
 
         mockMvc.perform(put(DogController.DOG_PATH_ID, testDog.getId())
                         .accept(MediaType.APPLICATION_JSON)
@@ -104,8 +114,9 @@ class DogControllerTest {
         assertThat(testDog).isEqualTo(dogArgumentCaptor.getValue());
     }
 
+
     @Test
-    void patchDogById() throws Exception {
+    void testPatchDogById() throws Exception {
         DogDTO testDog = dogServiceImpl.dogList().get(0);
         Map<String, Object> dogMap = new HashMap<>();
         dogMap.put("name", "new Name");
@@ -121,7 +132,7 @@ class DogControllerTest {
     }
 
     @Test
-    void deleteDogById() throws Exception {
+    void testDeleteDogById() throws Exception {
         DogDTO testDog = dogServiceImpl.dogList().get(0);
 
         mockMvc.perform(delete(DogController.DOG_PATH_ID, testDog.getId())
@@ -132,11 +143,5 @@ class DogControllerTest {
         assertThat(testDog.getId()).isEqualTo(uuidArgumentCaptor.getValue());
     }
 
-    @Test
-    void getDogByIdNotFound() throws Exception {
-        given(dogService.getDogById(any(UUID.class))).willReturn(Optional.empty());
 
-        mockMvc.perform(get(DogController.DOG_PATH_ID, UUID.randomUUID()))
-                .andExpect(status().isNotFound());
-    }
 }

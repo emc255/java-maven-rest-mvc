@@ -67,11 +67,16 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDTO updateCustomerById(UUID id, CustomerDTO customer) {
+    public Optional<CustomerDTO> updateCustomerById(UUID id, CustomerDTO customer) {
         CustomerDTO updatedCustomer = data.get(id);
         updatedCustomer.setName(customer.getName());
         updatedCustomer.setLastModifiedDate(LocalDateTime.now());
-        return updatedCustomer;
+        return Optional.of(updatedCustomer);
+    }
+    
+    @Override
+    public void deleteCustomerById(UUID id) {
+        data.remove(id);
     }
 
     @Override
@@ -79,10 +84,5 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerDTO updatedCustomer = data.get(id);
         if (customer.getName() != null) updatedCustomer.setName(customer.getName());
         updatedCustomer.setLastModifiedDate(LocalDateTime.now());
-    }
-
-    @Override
-    public void deleteCustomerById(UUID id) {
-        data.remove(id);
     }
 }

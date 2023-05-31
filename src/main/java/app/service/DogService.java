@@ -13,7 +13,7 @@ public interface DogService {
 
     DogDTO addDog(DogDTO dog);
 
-    void updateDogById(UUID id, DogDTO dog);
+    Optional<DogDTO> updateDogById(UUID id, DogDTO dog);
 
     void deleteDogById(UUID id);
 

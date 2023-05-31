@@ -41,13 +41,10 @@ public class DogController {
 
     @PutMapping(DOG_PATH_ID)
     public ResponseEntity<DogDTO> updateDogById(@PathVariable("id") UUID id, @RequestBody DogDTO dog) {
-        dogService.updateDogById(id, dog);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+        if (dogService.updateDogById(id, dog).isEmpty()) {
+            throw new NotFoundException();
+        }
 
-    @PatchMapping(DOG_PATH_ID)
-    public ResponseEntity<DogDTO> patchDogById(@PathVariable("id") UUID id, @RequestBody DogDTO dogDTO) {
-        dogService.patchDogById(id, dogDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -57,4 +54,9 @@ public class DogController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @PatchMapping(DOG_PATH_ID)
+    public ResponseEntity<DogDTO> patchDogById(@PathVariable("id") UUID id, @RequestBody DogDTO dogDTO) {
+        dogService.patchDogById(id, dogDTO);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

@@ -94,7 +94,7 @@ class CustomerControllerTest {
     void updateCustomerById() throws Exception {
         CustomerDTO testCustomer = customerServiceImpl.customerList().get(0);
         testCustomer.setName("AII");
-        given(customerService.updateCustomerById(testCustomer.getId(), testCustomer)).willReturn(testCustomer);
+        given(customerService.updateCustomerById(testCustomer.getId(), testCustomer)).willReturn(Optional.of(testCustomer));
 
         mockMvc.perform(put(CustomerController.CUSTOMER_PATH_ID, testCustomer.getId())
                         .accept(MediaType.APPLICATION_JSON)

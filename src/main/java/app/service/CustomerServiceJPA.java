@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,13 +45,15 @@ public class CustomerServiceJPA implements CustomerService {
     }
 
     @Override
-    public CustomerDTO updateCustomerById(UUID id, CustomerDTO customerDTO) {
+    public Optional<CustomerDTO> updateCustomerById(UUID id, CustomerDTO customerDTO) {
+        AtomicReference<Customer> atomicReference = new AtomicReference<>();
+        
         customerRepository.findById(id).ifPresent(updateCustomer -> {
             updateCustomer.setName(customerDTO.getName());
-            customerRepository.save(updateCustomer);
+            atomicReference.set(customerRepository.save(updateCustomer));
         });
-        Customer updateCustomer = customerRepository.findById(id).orElse(null);
-        return customerMapper.convertCustomerToCustomerDTO(updateCustomer);
+
+        return Optional.of(customerMapper.convertCustomerToCustomerDTO(atomicReference.get()));
     }
 
     @Override
