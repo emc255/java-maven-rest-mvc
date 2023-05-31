@@ -56,21 +56,31 @@ public class CustomerServiceJPA implements CustomerService {
         }, () -> {
             atomicReference.set(Optional.empty());
         });
-        
+
         return atomicReference.get();
     }
 
     @Override
-    public void deleteCustomerById(UUID id) {
-        customerRepository.deleteById(id);
+    public Boolean deleteCustomerById(UUID id) {
+        if (customerRepository.existsById(id)) {
+            customerRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public void patchCustomerById(UUID id, CustomerDTO customerDTO) {
-        customerRepository.findById(id).ifPresent(patchCustomer -> {
-            if (customerDTO.getName() != null) patchCustomer.setName(customerDTO.getName());
-            patchCustomer.setLastModifiedDate(LocalDateTime.now());
-            customerRepository.save(patchCustomer);
+    public Optional<CustomerDTO> patchCustomerById(UUID id, CustomerDTO customerDTO) {
+        AtomicReference<Optional<CustomerDTO>> atomicReference = new AtomicReference<>();
+        customerRepository.findById(id).ifPresentOrElse(updateCustomer -> {
+            Optional.ofNullable(customerDTO.getName()).ifPresent(updateCustomer::setName);
+            updateCustomer.setLastModifiedDate(LocalDateTime.now());
+            customerRepository.save(updateCustomer);
+            CustomerDTO updateCustomerDTO = customerMapper.convertCustomerToCustomerDTO(updateCustomer);
+            atomicReference.set(Optional.of(updateCustomerDTO));
+        }, () -> {
+            atomicReference.set(Optional.empty());
         });
+        return atomicReference.get();
     }
 }

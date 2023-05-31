@@ -14,7 +14,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -118,6 +120,7 @@ class DogControllerTest {
     @Test
     void testDeleteDogById() throws Exception {
         DogDTO testDog = dogServiceImpl.dogList().get(0);
+        given(dogService.deleteDogById(any())).willReturn(true);
 
         mockMvc.perform(delete(DogController.DOG_PATH_ID, testDog.getId())
                         .accept(MediaType.APPLICATION_JSON))
@@ -130,17 +133,20 @@ class DogControllerTest {
     @Test
     void testPatchDogById() throws Exception {
         DogDTO testDog = dogServiceImpl.dogList().get(0);
-        Map<String, Object> dogMap = new HashMap<>();
-        dogMap.put("name", "new Name");
+        testDog.setName("New Name");
+
+        given(dogService.patchDogById(testDog.getId(), testDog)).willReturn(Optional.of(testDog));
         mockMvc.perform(patch(DogController.DOG_PATH_ID, testDog.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dogMap)))
+                        .content(objectMapper.writeValueAsString(testDog)))
                 .andExpect(status().isNoContent());
 
         verify(dogService).patchDogById(uuidArgumentCaptor.capture(), dogArgumentCaptor.capture());
         assertThat(testDog.getId()).isEqualTo(uuidArgumentCaptor.getValue());
-        assertThat(dogMap.get("name")).isEqualTo(dogArgumentCaptor.getValue().getName());
+        assertThat(testDog.getName()).isEqualTo(dogArgumentCaptor.getValue().getName());
+
+
     }
 
 

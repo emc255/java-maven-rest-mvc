@@ -107,7 +107,44 @@ class DogControllerIntegrationTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     void testDeleteDogById() {
+        UUID dogId = dogRepository.findAll().get(0).getId();
+        ResponseEntity<DogDTO> responseEntity = dogController.deleteDogById(dogId);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+        assertThat(dogRepository.findById(dogId)).isEmpty();
+        List<Dog> dogList = dogRepository.findAll();
+        assertThat(dogList.size()).isEqualTo(2);
+    }
 
+    @Test
+    void testDeleteDogByIdNotFound() {
+        assertThrows(NotFoundException.class, () -> {
+            dogController.deleteDogById(UUID.randomUUID());
+        });
+    }
+
+    @Test
+    void testPatchDogById() {
+        UUID dogId = dogRepository.findAll().get(0).getId();
+        Dog dog = Dog.builder()
+                .name("Cupid")
+                .dogBreed(DogBreed.GOLDEN_RETRIEVER)
+                .price(new BigDecimal("11.22"))
+                .build();
+        DogDTO dogDTO = dogMapper.convertDogToDogDTO(dog);
+        dogController.patchDogById(dogId, dogDTO);
+        Dog testUpdateDog = dogRepository.findById(dogId).orElse(null);
+        assertThat(testUpdateDog).isNotNull();
+        assertThat(testUpdateDog.getName()).isEqualTo(dog.getName());
+        assertThat(testUpdateDog.getPrice()).isEqualTo(dog.getPrice());
+    }
+
+    @Test
+    void testPatchDogByIdNotFound() {
+        assertThrows(NotFoundException.class, () -> {
+            dogController.patchDogById(UUID.randomUUID(), DogDTO.builder().build());
+        });
     }
 }

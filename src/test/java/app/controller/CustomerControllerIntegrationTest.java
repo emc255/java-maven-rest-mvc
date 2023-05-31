@@ -105,12 +105,18 @@ class CustomerControllerIntegrationTest {
     void testDeleteCustomerById() {
         UUID customerId = customerRepository.findAll().get(0).getId();
         ResponseEntity<CustomerDTO> responseEntity = customerController.deleteCustomerById(customerId);
-
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
-
+        assertThat(customerRepository.findById(customerId)).isEmpty();
         List<Customer> customerList = customerRepository.findAll();
         assertThat(customerList).isNotNull();
         assertThat(customerList.size()).isEqualTo(2);
+    }
+
+    @Test
+    void testDeleteCustomerByIdNotFound() {
+        assertThrows(NotFoundException.class, () -> {
+            customerController.deleteCustomerById(UUID.randomUUID());
+        });
     }
 
     @Test
@@ -127,5 +133,12 @@ class CustomerControllerIntegrationTest {
         Customer testCustomer = customerRepository.findById(customer.getId()).orElse(null);
         assertThat(testCustomer).isNotNull();
         assertThat(testCustomer.getName()).isEqualTo("Ikura");
+    }
+
+    @Test
+    void testPatchCustomerByIdNotFound() {
+        assertThrows(NotFoundException.class, () -> {
+            customerController.patchCustomerById(UUID.randomUUID(), CustomerDTO.builder().build());
+        });
     }
 }

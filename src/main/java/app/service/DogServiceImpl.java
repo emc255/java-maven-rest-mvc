@@ -109,17 +109,21 @@ public class DogServiceImpl implements DogService {
     }
 
     @Override
-    public void deleteDogById(UUID id) {
+    public Boolean deleteDogById(UUID id) {
         data.remove(id);
+        return true;
+
     }
 
     @Override
-    public void patchDogById(UUID id, DogDTO dog) {
+    public Optional<DogDTO> patchDogById(UUID id, DogDTO dog) {
         DogDTO updateDog = data.get(id);
         if (dog.getName() != null) updateDog.setName(dog.getName());
         if (dog.getDogBreed() != null) updateDog.setDogBreed(dog.getDogBreed());
         if (dog.getQuantityOnHand() != null) updateDog.setQuantityOnHand(dog.getQuantityOnHand());
         if (dog.getPrice() != null) updateDog.setPrice(dog.getPrice());
         updateDog.setUpdateDate(LocalDateTime.now());
+
+        return Optional.of(updateDog);
     }
 }

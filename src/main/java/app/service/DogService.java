@@ -15,7 +15,7 @@ public interface DogService {
 
     Optional<DogDTO> updateDogById(UUID id, DogDTO dog);
 
-    void deleteDogById(UUID id);
+    Boolean deleteDogById(UUID id);
 
-    void patchDogById(UUID id, DogDTO dog);
+    Optional<DogDTO> patchDogById(UUID id, DogDTO dog);
 }

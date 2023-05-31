@@ -72,14 +72,16 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void deleteCustomerById(UUID id) {
+    public Boolean deleteCustomerById(UUID id) {
         data.remove(id);
+        return true;
     }
 
     @Override
-    public void patchCustomerById(UUID id, CustomerDTO customer) {
+    public Optional<CustomerDTO> patchCustomerById(UUID id, CustomerDTO customer) {
         CustomerDTO updatedCustomer = data.get(id);
         if (customer.getName() != null) updatedCustomer.setName(customer.getName());
         updatedCustomer.setLastModifiedDate(LocalDateTime.now());
+        return Optional.of(updatedCustomer);
     }
 }

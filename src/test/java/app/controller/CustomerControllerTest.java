@@ -15,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -118,7 +117,7 @@ class CustomerControllerTest {
     @Test
     void testDeleteCustomerById() throws Exception {
         CustomerDTO testCustomer = customerServiceImpl.customerList().get(0);
-
+        given(customerService.deleteCustomerById(any())).willReturn(true);
         mockMvc.perform(delete(CustomerController.CUSTOMER_PATH_ID, testCustomer.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
@@ -130,17 +129,19 @@ class CustomerControllerTest {
     @Test
     void testPatchCustomerById() throws Exception {
         CustomerDTO testCustomer = customerServiceImpl.customerList().get(0);
-        Map<String, Object> updateCustomer = Map.of("name", "AIAIAI");
+        testCustomer.setName("AIAIAI");
 
+
+        given(customerService.patchCustomerById(testCustomer.getId(), testCustomer)).willReturn(Optional.of(testCustomer));
         mockMvc.perform(patch(CustomerController.CUSTOMER_PATH_ID, testCustomer.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateCustomer)))
+                        .content(objectMapper.writeValueAsString(testCustomer)))
                 .andExpect(status().isNoContent());
 
         verify(customerService).patchCustomerById(uuidArgumentCaptor.capture(), customerArgumentCaptor.capture());
         assertThat(testCustomer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
-        assertThat(updateCustomer.get("name")).isEqualTo(customerArgumentCaptor.getValue().getName());
+        assertThat(testCustomer.getName()).isEqualTo(customerArgumentCaptor.getValue().getName());
     }
 
 }

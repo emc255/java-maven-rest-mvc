@@ -41,22 +41,19 @@ public class DogController {
 
     @PutMapping(DOG_PATH_ID)
     public ResponseEntity<DogDTO> updateDogById(@PathVariable("id") UUID id, @RequestBody DogDTO dog) {
-        if (dogService.updateDogById(id, dog).isEmpty()) {
-            throw new NotFoundException();
-        }
-
+        if (dogService.updateDogById(id, dog).isEmpty()) throw new NotFoundException();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping(DOG_PATH_ID)
     public ResponseEntity<DogDTO> deleteDogById(@PathVariable("id") UUID id) {
-        dogService.deleteDogById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if (dogService.deleteDogById(id)) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        throw new NotFoundException();
     }
 
     @PatchMapping(DOG_PATH_ID)
     public ResponseEntity<DogDTO> patchDogById(@PathVariable("id") UUID id, @RequestBody DogDTO dogDTO) {
-        dogService.patchDogById(id, dogDTO);
+        if (dogService.patchDogById(id, dogDTO).isEmpty()) throw new NotFoundException();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
