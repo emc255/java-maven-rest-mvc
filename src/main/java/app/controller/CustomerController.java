@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public class CustomerController {
     }
 
     @PostMapping(CUSTOMER_PATH_ADD)
-    public ResponseEntity<CustomerDTO> addCustomer(@RequestBody CustomerDTO customer) {
+    public ResponseEntity<CustomerDTO> addCustomer(@Validated @RequestBody CustomerDTO customer) {
         CustomerDTO savedCustomer = customerService.addCustomer(customer);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", CUSTOMER_PATH + "/" + savedCustomer.getId().toString());

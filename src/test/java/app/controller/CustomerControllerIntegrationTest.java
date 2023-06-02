@@ -76,6 +76,15 @@ class CustomerControllerIntegrationTest {
         assertThat(testCustomer).isNotNull();
     }
 
+//    @Test
+//    void testAddCustomerNullCustomerName() {
+//        CustomerDTO customerDTO = CustomerDTO.builder()
+//                .build();
+//
+//        ResponseEntity<CustomerDTO> responseEntity = customerController.addCustomer(customerDTO);
+//        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(400));
+//    }
+
     @Test
     void testUpdateCustomerById() {
         Customer testCustomer = customerRepository.findAll().get(0);

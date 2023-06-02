@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class DogController {
     }
 
     @PostMapping(DOG_PATH_ADD)
-    public ResponseEntity<DogDTO> addDog(@RequestBody DogDTO dogDTO) {
+    public ResponseEntity<DogDTO> addDog(@Validated @RequestBody DogDTO dogDTO) {
         DogDTO savedDog = dogService.addDog(dogDTO);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", DOG_PATH + "/" + savedDog.getId().toString());

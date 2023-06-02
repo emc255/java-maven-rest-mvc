@@ -40,6 +40,8 @@ public class DogServiceJPA implements DogService {
     @Override
     public DogDTO addDog(DogDTO dogDTO) {
         Dog dog = dogMapper.convertDogDTOToDog(dogDTO);
+        dog.setCreatedDate(LocalDateTime.now());
+        dog.setUpdateDate(LocalDateTime.now());
         Dog saveDog = dogRepository.save(dog);
         return dogMapper.convertDogToDogDTO(saveDog);
     }
@@ -50,6 +52,7 @@ public class DogServiceJPA implements DogService {
         dogRepository.findById(id).ifPresentOrElse(updateDog -> {
             updateDog.setName(dogDTO.getName());
             updateDog.setDogBreed(dogDTO.getDogBreed());
+            updateDog.setUpc(dogDTO.getUpc());
             updateDog.setQuantityOnHand(dogDTO.getQuantityOnHand());
             updateDog.setPrice(dogDTO.getPrice());
             updateDog.setUpdateDate(LocalDateTime.now());
@@ -76,10 +79,11 @@ public class DogServiceJPA implements DogService {
     public Optional<DogDTO> patchDogById(UUID id, DogDTO dogDTO) {
         AtomicReference<Optional<DogDTO>> atomicReference = new AtomicReference<>();
         dogRepository.findById(id).ifPresentOrElse(updateDog -> {
-            Optional.ofNullable(dogDTO.getName()).ifPresent(updateDog::setName);
-            Optional.ofNullable(dogDTO.getDogBreed()).ifPresent(updateDog::setDogBreed);
+            Optional.of(dogDTO.getName()).ifPresent(updateDog::setName);
+            Optional.of(dogDTO.getDogBreed()).ifPresent(updateDog::setDogBreed);
+            Optional.of(dogDTO.getUpc()).ifPresent(updateDog::setUpc);
             Optional.ofNullable(dogDTO.getQuantityOnHand()).ifPresent(updateDog::setQuantityOnHand);
-            Optional.ofNullable(dogDTO.getPrice()).ifPresent(updateDog::setPrice);
+            Optional.of(dogDTO.getPrice()).ifPresent(updateDog::setPrice);
             updateDog.setUpdateDate(LocalDateTime.now());
             dogRepository.save(updateDog);
             DogDTO updateDogDTO = dogMapper.convertDogToDogDTO(updateDog);

@@ -78,15 +78,15 @@ public class DogServiceImpl implements DogService {
     }
 
     @Override
-    public DogDTO addDog(DogDTO dog) {
+    public DogDTO addDog(DogDTO dogDTO) {
         DogDTO savedDog = DogDTO.builder()
                 .id(UUID.randomUUID())
                 .version(1)
-                .name(dog.getName())
-                .dogBreed(dog.getDogBreed())
-                .upc(dog.getUpc())
-                .price(dog.getPrice())
-                .quantityOnHand(dog.getQuantityOnHand())
+                .name(dogDTO.getName())
+                .dogBreed(dogDTO.getDogBreed())
+                .upc(dogDTO.getUpc())
+                .price(dogDTO.getPrice())
+                .quantityOnHand(dogDTO.getQuantityOnHand())
                 .createdDate(LocalDateTime.now())
                 .updateDate(LocalDateTime.now())
                 .build();
@@ -97,12 +97,13 @@ public class DogServiceImpl implements DogService {
     }
 
     @Override
-    public Optional<DogDTO> updateDogById(UUID id, DogDTO dog) {
+    public Optional<DogDTO> updateDogById(UUID id, DogDTO dogDTO) {
         DogDTO updateDog = data.get(id);
-        updateDog.setName(dog.getName());
-        updateDog.setDogBreed(dog.getDogBreed());
-        updateDog.setQuantityOnHand(dog.getQuantityOnHand());
-        updateDog.setPrice(dog.getPrice());
+        updateDog.setName(dogDTO.getName());
+        updateDog.setDogBreed(dogDTO.getDogBreed());
+        updateDog.setUpc(dogDTO.getUpc());
+        updateDog.setQuantityOnHand(dogDTO.getQuantityOnHand());
+        updateDog.setPrice(dogDTO.getPrice());
         updateDog.setUpdateDate(LocalDateTime.now());
 
         return Optional.of(updateDog);
@@ -116,12 +117,13 @@ public class DogServiceImpl implements DogService {
     }
 
     @Override
-    public Optional<DogDTO> patchDogById(UUID id, DogDTO dog) {
+    public Optional<DogDTO> patchDogById(UUID id, DogDTO dogDTO) {
         DogDTO updateDog = data.get(id);
-        if (dog.getName() != null) updateDog.setName(dog.getName());
-        if (dog.getDogBreed() != null) updateDog.setDogBreed(dog.getDogBreed());
-        if (dog.getQuantityOnHand() != null) updateDog.setQuantityOnHand(dog.getQuantityOnHand());
-        if (dog.getPrice() != null) updateDog.setPrice(dog.getPrice());
+        updateDog.setName(dogDTO.getName());
+        updateDog.setDogBreed(dogDTO.getDogBreed());
+        updateDog.setUpc(dogDTO.getUpc());
+        if (dogDTO.getQuantityOnHand() != null) updateDog.setQuantityOnHand(dogDTO.getQuantityOnHand());
+        updateDog.setPrice(dogDTO.getPrice());
         updateDog.setUpdateDate(LocalDateTime.now());
 
         return Optional.of(updateDog);

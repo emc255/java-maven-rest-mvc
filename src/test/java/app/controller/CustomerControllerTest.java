@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 import java.util.Optional;
@@ -95,6 +96,30 @@ class CustomerControllerTest {
                         .content(objectMapper.writeValueAsString(customer)))
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"));
+    }
+
+    @Test
+    void testAddCustomerWithNullName() throws Exception {
+        CustomerDTO customerDTO = CustomerDTO.builder().build();
+        given(customerService.addCustomer(customerDTO)).willReturn(null);
+
+        mockMvc.perform(post(CustomerController.CUSTOMER_PATH_ADD)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(customerDTO)))
+                .andExpect(status().isBadRequest());
+
+        /*
+         * Useful method/trick to see the result
+         * Use debugger
+         * */
+
+        MvcResult mvcResult = mockMvc.perform(post(CustomerController.CUSTOMER_PATH_ADD)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(customerDTO)))
+                .andExpect(status().isBadRequest()).andReturn();
+        System.out.println(mvcResult.getResponse().getContentAsString());
     }
 
     @Test
