@@ -68,7 +68,7 @@ class DogControllerIntegrationTest {
                 .dogBreed(DogBreed.GOLDEN_RETRIEVER)
                 .price(new BigDecimal("11.11"))
                 .build();
-        ResponseEntity<DogDTO> responseEntity = dogController.addDog(dogDTO);
+        ResponseEntity<Void> responseEntity = dogController.addDog(dogDTO);
 
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
@@ -90,7 +90,7 @@ class DogControllerIntegrationTest {
         dogDTO.setName("Sukoshi");
         dogDTO.setDogBreed(DogBreed.SHIBA_INU);
 
-        ResponseEntity<DogDTO> responseEntity = dogController.updateDogById(dog.getId(), dogDTO);
+        ResponseEntity<Void> responseEntity = dogController.updateDogById(dog.getId(), dogDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
         Dog testUpdateDog = dogRepository.findById(dog.getId()).orElse(null);
@@ -111,7 +111,7 @@ class DogControllerIntegrationTest {
     @Rollback
     void testDeleteDogById() {
         UUID dogId = dogRepository.findAll().get(0).getId();
-        ResponseEntity<DogDTO> responseEntity = dogController.deleteDogById(dogId);
+        ResponseEntity<Void> responseEntity = dogController.deleteDogById(dogId);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
         assertThat(dogRepository.findById(dogId)).isEmpty();
         List<Dog> dogList = dogRepository.findAll();
@@ -126,15 +126,19 @@ class DogControllerIntegrationTest {
     }
 
     @Test
-    void testPatchDogById() {
+    void testPatchDogById() throws Exception {
         UUID dogId = dogRepository.findAll().get(0).getId();
         Dog dog = Dog.builder()
                 .name("Cupid")
                 .dogBreed(DogBreed.GOLDEN_RETRIEVER)
+                .upc("1221")
                 .price(new BigDecimal("11.22"))
                 .build();
         DogDTO dogDTO = dogMapper.convertDogToDogDTO(dog);
-        dogController.patchDogById(dogId, dogDTO);
+
+        ResponseEntity<Void> responseEntity = dogController.patchDogById(dogId, dogDTO);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+
         Dog testUpdateDog = dogRepository.findById(dogId).orElse(null);
         assertThat(testUpdateDog).isNotNull();
         assertThat(testUpdateDog.getName()).isEqualTo(dog.getName());

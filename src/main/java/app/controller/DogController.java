@@ -33,7 +33,7 @@ public class DogController {
     }
 
     @PostMapping(DOG_PATH_ADD)
-    public ResponseEntity<DogDTO> addDog(@Validated @RequestBody DogDTO dogDTO) {
+    public ResponseEntity<Void> addDog(@Validated @RequestBody DogDTO dogDTO) {
         DogDTO savedDog = dogService.addDog(dogDTO);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", DOG_PATH + "/" + savedDog.getId().toString());
@@ -41,19 +41,19 @@ public class DogController {
     }
 
     @PutMapping(DOG_PATH_ID)
-    public ResponseEntity<DogDTO> updateDogById(@PathVariable("id") UUID id, @RequestBody DogDTO dog) {
-        if (dogService.updateDogById(id, dog).isEmpty()) throw new NotFoundException();
+    public ResponseEntity<Void> updateDogById(@PathVariable("id") UUID id, @Validated @RequestBody DogDTO dogDTO) {
+        if (dogService.updateDogById(id, dogDTO).isEmpty()) throw new NotFoundException();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping(DOG_PATH_ID)
-    public ResponseEntity<DogDTO> deleteDogById(@PathVariable("id") UUID id) {
+    public ResponseEntity<Void> deleteDogById(@PathVariable("id") UUID id) {
         if (dogService.deleteDogById(id)) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         throw new NotFoundException();
     }
 
     @PatchMapping(DOG_PATH_ID)
-    public ResponseEntity<DogDTO> patchDogById(@PathVariable("id") UUID id, @RequestBody DogDTO dogDTO) {
+    public ResponseEntity<Void> patchDogById(@PathVariable("id") UUID id, @RequestBody DogDTO dogDTO) {
         if (dogService.patchDogById(id, dogDTO).isEmpty()) throw new NotFoundException();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

@@ -34,19 +34,17 @@ public class CustomerController {
     }
 
     @PostMapping(CUSTOMER_PATH_ADD)
-    public ResponseEntity<CustomerDTO> addCustomer(@Validated @RequestBody CustomerDTO customer) {
-        CustomerDTO savedCustomer = customerService.addCustomer(customer);
+    public ResponseEntity<Void> addCustomer(@Validated @RequestBody CustomerDTO customerDTO) {
+        CustomerDTO savedCustomer = customerService.addCustomer(customerDTO);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", CUSTOMER_PATH + "/" + savedCustomer.getId().toString());
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
     @PutMapping(CUSTOMER_PATH_ID)
-    public ResponseEntity<CustomerDTO> updateCustomerById(@PathVariable("id") UUID id, @RequestBody CustomerDTO customer) {
-        Optional<CustomerDTO> updateCustomerDTO = customerService.updateCustomerById(id, customer);
-        if (updateCustomerDTO.isEmpty()) {
-            throw new NotFoundException();
-        }
+    public ResponseEntity<Void> updateCustomerById(@PathVariable("id") UUID id, @Validated @RequestBody CustomerDTO customerDTO) {
+        Optional<CustomerDTO> updateCustomerDTO = customerService.updateCustomerById(id, customerDTO);
+        if (updateCustomerDTO.isEmpty()) throw new NotFoundException();
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", CUSTOMER_PATH + "/" + updateCustomerDTO.get().getId().toString());
@@ -55,14 +53,14 @@ public class CustomerController {
     }
 
     @DeleteMapping(CUSTOMER_PATH_ID)
-    public ResponseEntity<CustomerDTO> deleteCustomerById(@PathVariable("id") UUID id) {
+    public ResponseEntity<Void> deleteCustomerById(@PathVariable("id") UUID id) {
         if (customerService.deleteCustomerById(id)) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         throw new NotFoundException();
     }
 
     @PatchMapping(CUSTOMER_PATH_ID)
-    public ResponseEntity<CustomerDTO> patchCustomerById(@PathVariable("id") UUID id, @RequestBody CustomerDTO customer) {
-        if (customerService.patchCustomerById(id, customer).isEmpty()) throw new NotFoundException();
+    public ResponseEntity<Void> patchCustomerById(@PathVariable("id") UUID id, @RequestBody CustomerDTO customerDTO) {
+        if (customerService.patchCustomerById(id, customerDTO).isEmpty()) throw new NotFoundException();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

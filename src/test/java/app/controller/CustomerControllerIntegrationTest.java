@@ -64,7 +64,7 @@ class CustomerControllerIntegrationTest {
         CustomerDTO customerDTO = CustomerDTO.builder()
                 .name("Eva")
                 .build();
-        ResponseEntity<CustomerDTO> responseEntity = customerController.addCustomer(customerDTO);
+        ResponseEntity<Void> responseEntity = customerController.addCustomer(customerDTO);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
         assertThat(responseEntity.getHeaders().getLocation()).isNotNull();
@@ -75,16 +75,7 @@ class CustomerControllerIntegrationTest {
         Customer testCustomer = customerRepository.findById(testCustomerDTOId).orElse(null);
         assertThat(testCustomer).isNotNull();
     }
-
-//    @Test
-//    void testAddCustomerNullCustomerName() {
-//        CustomerDTO customerDTO = CustomerDTO.builder()
-//                .build();
-//
-//        ResponseEntity<CustomerDTO> responseEntity = customerController.addCustomer(customerDTO);
-//        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(400));
-//    }
-
+    
     @Test
     void testUpdateCustomerById() {
         Customer testCustomer = customerRepository.findAll().get(0);
@@ -93,7 +84,7 @@ class CustomerControllerIntegrationTest {
         testCustomerDTO.setVersion(null);
         testCustomerDTO.setName("Jessica");
 
-        ResponseEntity<CustomerDTO> responseEntity = customerController.updateCustomerById(testCustomer.getId(), testCustomerDTO);
+        ResponseEntity<Void> responseEntity = customerController.updateCustomerById(testCustomer.getId(), testCustomerDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(200));
 
         Customer testUpdateCustomer = customerRepository.findById(testCustomer.getId()).orElse(null);
@@ -113,7 +104,7 @@ class CustomerControllerIntegrationTest {
     @Rollback
     void testDeleteCustomerById() {
         UUID customerId = customerRepository.findAll().get(0).getId();
-        ResponseEntity<CustomerDTO> responseEntity = customerController.deleteCustomerById(customerId);
+        ResponseEntity<Void> responseEntity = customerController.deleteCustomerById(customerId);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
         assertThat(customerRepository.findById(customerId)).isEmpty();
         List<Customer> customerList = customerRepository.findAll();
@@ -136,7 +127,7 @@ class CustomerControllerIntegrationTest {
         testCustomerDTO.setVersion(null);
         testCustomerDTO.setName("Ikura");
 
-        ResponseEntity<CustomerDTO> responseEntity = customerController.patchCustomerById(customer.getId(), testCustomerDTO);
+        ResponseEntity<Void> responseEntity = customerController.patchCustomerById(customer.getId(), testCustomerDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
         Customer testCustomer = customerRepository.findById(customer.getId()).orElse(null);

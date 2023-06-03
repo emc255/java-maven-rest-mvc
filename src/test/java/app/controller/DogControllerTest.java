@@ -63,16 +63,16 @@ class DogControllerTest {
 
     @Test
     void testGetDogById() throws Exception {
-        DogDTO testDog = dogServiceImpl.dogList().get(0);
-        given(dogService.getDogById(testDog.getId()))
-                .willReturn(Optional.of(testDog));
+        DogDTO testDogDTO = dogServiceImpl.dogList().get(0);
+        given(dogService.getDogById(testDogDTO.getId()))
+                .willReturn(Optional.of(testDogDTO));
 
-        mockMvc.perform(get(DogController.DOG_PATH_ID, testDog.getId())
+        mockMvc.perform(get(DogController.DOG_PATH_ID, testDogDTO.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", is(testDog.getId().toString())))
-                .andExpect(jsonPath("$.name", is(testDog.getName())));
+                .andExpect(jsonPath("$.id", is(testDogDTO.getId().toString())))
+                .andExpect(jsonPath("$.name", is(testDogDTO.getName())));
     }
 
     @Test
@@ -101,50 +101,82 @@ class DogControllerTest {
     }
 
     @Test
-    public void testUpdateDogById() throws Exception {
-        DogDTO testDog = dogServiceImpl.dogList().get(0);
-        testDog.setName("Chocobo");
-        given(dogService.updateDogById(testDog.getId(), testDog)).willReturn(Optional.of(testDog));
+    void testAddDogFieldNull() throws Exception {
+        DogDTO dogDTO = DogDTO.builder()
+                .name(null)
+                .dogBreed(null)
+                .upc(null)
+                .price(null)
+                .build();
+        given(dogService.addDog(dogDTO)).willReturn(null);
 
-        mockMvc.perform(put(DogController.DOG_PATH_ID, testDog.getId())
+        mockMvc.perform(post(DogController.DOG_PATH_ADD)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testDog)))
+                        .content(objectMapper.writeValueAsString(dogDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.length()", is(6)));
+    }
+
+    @Test
+    public void testUpdateDogById() throws Exception {
+        DogDTO testDogDTO = dogServiceImpl.dogList().get(0);
+        testDogDTO.setName("Chocobo");
+        given(dogService.updateDogById(testDogDTO.getId(), testDogDTO)).willReturn(Optional.of(testDogDTO));
+
+        mockMvc.perform(put(DogController.DOG_PATH_ID, testDogDTO.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(testDogDTO)))
                 .andExpect(status().isNoContent());
         verify(dogService).updateDogById(uuidArgumentCaptor.capture(), dogArgumentCaptor.capture());
-        assertThat(testDog.getId()).isEqualTo(uuidArgumentCaptor.getValue());
-        assertThat(testDog).isEqualTo(dogArgumentCaptor.getValue());
+        assertThat(testDogDTO.getId()).isEqualTo(uuidArgumentCaptor.getValue());
+        assertThat(testDogDTO).isEqualTo(dogArgumentCaptor.getValue());
+    }
+
+    @Test
+    public void testUpdateDogByIdFieldNameNull() throws Exception {
+        DogDTO testDogDTO = dogServiceImpl.dogList().get(0);
+        testDogDTO.setName(null);
+        given(dogService.updateDogById(testDogDTO.getId(), testDogDTO)).willReturn(Optional.of(testDogDTO));
+
+        mockMvc.perform(put(DogController.DOG_PATH_ID, testDogDTO.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(testDogDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.length()", is(2)));
     }
 
 
     @Test
     void testDeleteDogById() throws Exception {
-        DogDTO testDog = dogServiceImpl.dogList().get(0);
+        DogDTO testDogDTO = dogServiceImpl.dogList().get(0);
         given(dogService.deleteDogById(any())).willReturn(true);
 
-        mockMvc.perform(delete(DogController.DOG_PATH_ID, testDog.getId())
+        mockMvc.perform(delete(DogController.DOG_PATH_ID, testDogDTO.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
         verify(dogService).deleteDogById(uuidArgumentCaptor.capture());
-        assertThat(testDog.getId()).isEqualTo(uuidArgumentCaptor.getValue());
+        assertThat(testDogDTO.getId()).isEqualTo(uuidArgumentCaptor.getValue());
     }
 
     @Test
     void testPatchDogById() throws Exception {
-        DogDTO testDog = dogServiceImpl.dogList().get(0);
-        testDog.setName("New Name");
+        DogDTO testDogDTO = dogServiceImpl.dogList().get(0);
+        testDogDTO.setName("New Name");
 
-        given(dogService.patchDogById(testDog.getId(), testDog)).willReturn(Optional.of(testDog));
-        mockMvc.perform(patch(DogController.DOG_PATH_ID, testDog.getId())
+        given(dogService.patchDogById(testDogDTO.getId(), testDogDTO)).willReturn(Optional.of(testDogDTO));
+        mockMvc.perform(patch(DogController.DOG_PATH_ID, testDogDTO.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testDog)))
+                        .content(objectMapper.writeValueAsString(testDogDTO)))
                 .andExpect(status().isNoContent());
 
         verify(dogService).patchDogById(uuidArgumentCaptor.capture(), dogArgumentCaptor.capture());
-        assertThat(testDog.getId()).isEqualTo(uuidArgumentCaptor.getValue());
-        assertThat(testDog.getName()).isEqualTo(dogArgumentCaptor.getValue().getName());
+        assertThat(testDogDTO.getId()).isEqualTo(uuidArgumentCaptor.getValue());
+        assertThat(testDogDTO.getName()).isEqualTo(dogArgumentCaptor.getValue().getName());
 
 
     }
