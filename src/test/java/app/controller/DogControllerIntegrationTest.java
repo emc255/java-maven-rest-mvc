@@ -6,13 +6,20 @@ import app.mapper.DogMapper;
 import app.model.DogBreed;
 import app.model.DogDTO;
 import app.repository.DogRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,6 +27,8 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 class DogControllerIntegrationTest {
@@ -29,6 +38,18 @@ class DogControllerIntegrationTest {
     DogRepository dogRepository;
     @Autowired
     DogMapper dogMapper;
+    @Autowired
+    WebApplicationContext webApplicationContext;
+    @Autowired
+    ObjectMapper objectMapper;
+
+    MockMvc mockMvc;
+
+
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    }
 
     @Test
     void testDogList() throws Exception {
@@ -150,5 +171,27 @@ class DogControllerIntegrationTest {
         assertThrows(NotFoundException.class, () -> {
             dogController.patchDogById(UUID.randomUUID(), DogDTO.builder().build());
         });
+    }
+
+    @Test
+    void testPatchDogByIdNameExceed50() throws Exception {
+        UUID dogId = dogRepository.findAll().get(0).getId();
+        Dog dog = Dog.builder()
+                .name("123456789101234567891012345678910123456789101234567891012345678910")
+                .dogBreed(DogBreed.GOLDEN_RETRIEVER)
+                .upc("1221")
+                .price(new BigDecimal("11.22"))
+                .build();
+        DogDTO dogDTO = dogMapper.convertDogToDogDTO(dog);
+
+        MvcResult mvcResult = mockMvc.perform(patch(DogController.DOG_PATH_ID, dogId)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dogDTO)))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        System.out.println(mvcResult.getResponse().getContentAsString());
+
     }
 }

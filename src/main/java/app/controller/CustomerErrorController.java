@@ -1,6 +1,8 @@
 package app.controller;
 
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,5 +24,21 @@ public class CustomerErrorController {
                 }).collect(Collectors.toList());
 
         return ResponseEntity.badRequest().body(errorList);
+    }
+
+    @ExceptionHandler
+    ResponseEntity<?> handleJPAViolation(TransactionSystemException exception) {
+        ResponseEntity.BodyBuilder responseEntity = ResponseEntity.badRequest();
+
+        if (exception.getCause().getCause() instanceof ConstraintViolationException constraintViolationException) {
+            List<Map<String, String>> errorList = constraintViolationException.getConstraintViolations().stream()
+                    .map(constraintViolation -> {
+                        Map<String, String> errors = new HashMap<>();
+                        errors.put(constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage());
+                        return errors;
+                    }).collect(Collectors.toList());
+            return responseEntity.body(errorList);
+        }
+        return responseEntity.build();
     }
 }

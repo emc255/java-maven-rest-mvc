@@ -2,6 +2,9 @@ package app.entity;
 
 import app.model.DogBreed;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -24,10 +27,23 @@ public class Dog {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer version;
 
+    @NotBlank
+    @NotNull
+    @Size(max = 50)
+    @Column(length = 50)
     private String name;
+
+    @NotNull
     private DogBreed dogBreed;
+
+    @NotBlank
+    @NotNull
+    @Size(max = 100)
     private String upc;
+
     private Integer quantityOnHand;
+
+    @NotNull
     private BigDecimal price;
     private LocalDateTime createdDate;
     private LocalDateTime updateDate;

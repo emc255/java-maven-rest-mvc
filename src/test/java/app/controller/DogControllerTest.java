@@ -177,9 +177,5 @@ class DogControllerTest {
         verify(dogService).patchDogById(uuidArgumentCaptor.capture(), dogArgumentCaptor.capture());
         assertThat(testDogDTO.getId()).isEqualTo(uuidArgumentCaptor.getValue());
         assertThat(testDogDTO.getName()).isEqualTo(dogArgumentCaptor.getValue().getName());
-
-
     }
-
-
 }
