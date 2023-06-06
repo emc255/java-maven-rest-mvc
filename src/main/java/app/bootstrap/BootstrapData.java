@@ -25,11 +25,9 @@ public class BootstrapData implements CommandLineRunner {
     public void run(String... args) throws Exception {
         loadDogData();
         loadCustomerDate();
-        System.out.println(dogRepository.count());
     }
 
     private void loadDogData() {
-
         Dog goldenRetriever = Dog.builder()
                 .name("Thor")
                 .dogBreed(DogBreed.ALASKAN_MALAMUTE)
@@ -61,20 +59,13 @@ public class BootstrapData implements CommandLineRunner {
                 .build();
 
         dogRepository.saveAll(Arrays.asList(goldenRetriever, siberianHusky, alaskanMalamute));
-
-        for (Dog dog : dogRepository.findAll()) {
-            System.out.println(dog.getName());
-            System.out.println(dog.getId());
-            System.out.println(dog.getUpc());
-            System.out.println(dog.getVersion());
-        }
     }
 
     private void loadCustomerDate() {
-
         Customer ai = Customer.builder()
                 .id(UUID.randomUUID())
                 .name("AI")
+                .email("ai@mail.com")
                 .version(1)
                 .createdDate(LocalDateTime.now())
                 .lastModifiedDate(LocalDateTime.now())
@@ -83,6 +74,7 @@ public class BootstrapData implements CommandLineRunner {
         Customer iu = Customer.builder()
                 .id(UUID.randomUUID())
                 .name("IU")
+                .email("iu@mail.com")
                 .version(1)
                 .createdDate(LocalDateTime.now())
                 .lastModifiedDate(LocalDateTime.now())
@@ -91,7 +83,8 @@ public class BootstrapData implements CommandLineRunner {
         Customer celine = Customer.builder()
                 .id(UUID.randomUUID())
                 .name("Celine")
-
+                .email("celine@mail.com")
+                .version(1)
                 .createdDate(LocalDateTime.now())
                 .lastModifiedDate(LocalDateTime.now())
                 .build();

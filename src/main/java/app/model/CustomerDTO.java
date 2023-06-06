@@ -1,6 +1,7 @@
 package app.model;
 
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -17,6 +18,9 @@ public class CustomerDTO {
     @NotBlank
     @NotNull
     private String name;
+
+    @Column
+    private String email;
     
     private Integer version;
     private LocalDateTime createdDate;

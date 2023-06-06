@@ -31,6 +31,9 @@ public class Customer {
     @NotNull
     private String name;
 
+    @Column
+    private String email;
+
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
 
