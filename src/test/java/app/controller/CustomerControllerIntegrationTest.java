@@ -75,7 +75,7 @@ class CustomerControllerIntegrationTest {
         Customer testCustomer = customerRepository.findById(testCustomerDTOId).orElse(null);
         assertThat(testCustomer).isNotNull();
     }
-    
+
     @Test
     void testUpdateCustomerById() {
         Customer testCustomer = customerRepository.findAll().get(0);
