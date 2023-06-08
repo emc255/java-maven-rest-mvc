@@ -2,16 +2,25 @@ package app.bootstrap;
 
 import app.entity.Customer;
 import app.entity.Dog;
+import app.entity.Volcano;
+import app.mapper.VolcanoMapper;
 import app.model.DogBreed;
+import app.model.VolcanoDTO;
 import app.repository.CustomerRepository;
 import app.repository.DogRepository;
+import app.repository.VolcanoRepository;
+import app.service.VolcanoCSV;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -20,14 +29,19 @@ import java.util.UUID;
 public class BootstrapData implements CommandLineRunner {
     private final DogRepository dogRepository;
     private final CustomerRepository customerRepository;
+    private final VolcanoRepository volcanoRepository;
+    private final VolcanoCSV volcanoCSV;
+    private final VolcanoMapper volcanoMapper;
 
     @Override
     public void run(String... args) throws Exception {
         loadDogData();
         loadCustomerDate();
+        loadVolcano();
     }
 
     private void loadDogData() {
+        dogRepository.deleteAll();
         Dog goldenRetriever = Dog.builder()
                 .name("Thor")
                 .dogBreed(DogBreed.ALASKAN_MALAMUTE)
@@ -62,6 +76,7 @@ public class BootstrapData implements CommandLineRunner {
     }
 
     private void loadCustomerDate() {
+        customerRepository.deleteAll();
         Customer ai = Customer.builder()
                 .id(UUID.randomUUID())
                 .name("AI")
@@ -90,5 +105,17 @@ public class BootstrapData implements CommandLineRunner {
                 .build();
 
         customerRepository.saveAll(Arrays.asList(ai, iu, celine));
+    }
+
+    private void loadVolcano() throws FileNotFoundException {
+        volcanoRepository.deleteAll();
+        File file = ResourceUtils.getFile("classpath:csv-data/volcano_db.csv");
+        List<VolcanoDTO> volcanoDTOList = volcanoCSV.convertCSV(file);
+        for (VolcanoDTO volcanoDTO : volcanoDTOList) {
+            Volcano volcano = volcanoMapper.convertVolcanoDTOToVolcano(volcanoDTO);
+            volcano.setId(UUID.randomUUID());
+            volcanoRepository.save(volcano);
+        }
+
     }
 }
