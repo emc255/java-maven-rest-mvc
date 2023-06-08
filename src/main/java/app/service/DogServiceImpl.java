@@ -13,7 +13,6 @@ import java.util.*;
 
 @Slf4j
 @Service
-
 @AllArgsConstructor
 public class DogServiceImpl implements DogService {
     private final Map<UUID, DogDTO> data;

@@ -87,7 +87,7 @@ class CustomerControllerTest {
         CustomerDTO testCustomerDTO = customerServiceImpl.customerList().get(0);
         testCustomerDTO.setId(null);
         testCustomerDTO.setVersion(null);
-
+    
         given(customerService.addCustomer(customerArgumentCaptor.capture())).willReturn(customerServiceImpl.customerList().get(1));
 
         mockMvc.perform(post(CustomerController.CUSTOMER_PATH_ADD)

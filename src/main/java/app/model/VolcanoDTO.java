@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class VolcanoDTO {
-    @CsvBindByName
-    private String number;
+
+    private UUID id;
 
     @CsvBindByName
     private String name;
@@ -35,8 +37,4 @@ public class VolcanoDTO {
 
     @CsvBindByName
     private String status;
-
-    @CsvBindByName
-    private String lastKnown;
-
 }

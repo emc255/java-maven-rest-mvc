@@ -51,10 +51,10 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDTO addCustomer(CustomerDTO customer) {
+    public CustomerDTO addCustomer(CustomerDTO customerDTO) {
         CustomerDTO savedCustomer = CustomerDTO.builder()
                 .id(UUID.randomUUID())
-                .name(customer.getName())
+                .name(customerDTO.getName())
                 .version(1)
                 .createdDate(LocalDateTime.now())
                 .lastModifiedDate(LocalDateTime.now())
@@ -64,9 +64,9 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Optional<CustomerDTO> updateCustomerById(UUID id, CustomerDTO customer) {
+    public Optional<CustomerDTO> updateCustomerById(UUID id, CustomerDTO customerDTO) {
         CustomerDTO updatedCustomer = data.get(id);
-        updatedCustomer.setName(customer.getName());
+        updatedCustomer.setName(customerDTO.getName());
         updatedCustomer.setLastModifiedDate(LocalDateTime.now());
         return Optional.of(updatedCustomer);
     }
@@ -78,9 +78,9 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Optional<CustomerDTO> patchCustomerById(UUID id, CustomerDTO customer) {
+    public Optional<CustomerDTO> patchCustomerById(UUID id, CustomerDTO customerDTO) {
         CustomerDTO updatedCustomer = data.get(id);
-        if (customer.getName() != null) updatedCustomer.setName(customer.getName());
+        if (customerDTO.getName() != null) updatedCustomer.setName(customerDTO.getName());
         updatedCustomer.setLastModifiedDate(LocalDateTime.now());
         return Optional.of(updatedCustomer);
     }

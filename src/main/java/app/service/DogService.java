@@ -11,11 +11,11 @@ public interface DogService {
 
     Optional<DogDTO> getDogById(UUID id);
 
-    DogDTO addDog(DogDTO dog);
+    DogDTO addDog(DogDTO dogDTO);
 
-    Optional<DogDTO> updateDogById(UUID id, DogDTO dog);
+    Optional<DogDTO> updateDogById(UUID id, DogDTO dogDTO);
 
     Boolean deleteDogById(UUID id);
 
-    Optional<DogDTO> patchDogById(UUID id, DogDTO dog);
+    Optional<DogDTO> patchDogById(UUID id, DogDTO dogDTO);
 }
