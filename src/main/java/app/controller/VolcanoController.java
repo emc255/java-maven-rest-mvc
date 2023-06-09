@@ -23,8 +23,9 @@ public class VolcanoController {
 
 
     @GetMapping({VOLCANO_PATH, VOLCANO_PATH + "/"})
-    public List<VolcanoDTO> dogList() {
-        return volcanoService.volcanoList();
+    public List<VolcanoDTO> volcanoList(@RequestParam(required = false) String country,
+                                        @RequestParam(required = false) String region) {
+        return volcanoService.volcanoList(country, region);
     }
 
     @GetMapping(VOLCANO_PATH_ID)

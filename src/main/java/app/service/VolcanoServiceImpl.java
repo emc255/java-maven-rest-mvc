@@ -7,6 +7,7 @@ import app.repository.VolcanoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,9 +24,21 @@ public class VolcanoServiceImpl implements VolcanoService {
     private final VolcanoMapper volcanoMapper;
 
     @Override
-    public List<VolcanoDTO> volcanoList() {
-        return volcanoRepository.findAll()
-                .stream()
+    public List<VolcanoDTO> volcanoList(String country, String region) {
+        List<Volcano> volcanoList;
+
+        if (StringUtils.hasText(country) && StringUtils.hasText(region)) {
+            System.out.println("asd");
+            volcanoList = volcanoListByCountryAndRegion(country, region);
+        } else if (StringUtils.hasText(country) && !StringUtils.hasText(region)) {
+            volcanoList = volcanoListByCountry(country);
+        } else if (!StringUtils.hasText(country) && StringUtils.hasText(region)) {
+            volcanoList = volcanoListByRegion(region);
+        } else {
+            volcanoList = volcanoRepository.findAll();
+        }
+
+        return volcanoList.stream()
                 .map(volcanoMapper::convertVolcanoToVolcanoDTO)
                 .collect(Collectors.toList());
     }
@@ -66,5 +79,22 @@ public class VolcanoServiceImpl implements VolcanoService {
             return true;
         }
         return false;
+    }
+
+    private List<Volcano> volcanoListByCountryAndRegion(String country, String region) {
+        return volcanoRepository.findAllByCountryIsLikeIgnoreCaseAndRegionIsLikeIgnoreCase(addWildCard(country), addWildCard(region));
+    }
+
+    private List<Volcano> volcanoListByCountry(String country) {
+        return volcanoRepository.findAllByCountryIsLikeIgnoreCase(addWildCard(country));
+    }
+
+    private List<Volcano> volcanoListByRegion(String region) {
+        return volcanoRepository.findAllByRegionIsLikeIgnoreCase(addWildCard(region));
+    }
+
+
+    private String addWildCard(String word) {
+        return "%" + word + "%";
     }
 }

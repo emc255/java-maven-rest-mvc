@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface VolcanoService {
 
-    List<VolcanoDTO> volcanoList();
+    List<VolcanoDTO> volcanoList(String country, String region);
 
     Optional<VolcanoDTO> getVolcanoById(UUID id);
 
@@ -17,5 +17,5 @@ public interface VolcanoService {
     Optional<VolcanoDTO> updateVolcanoById(UUID id, VolcanoDTO dog);
 
     Boolean deleteVolcanoById(UUID id);
-    
+
 }
