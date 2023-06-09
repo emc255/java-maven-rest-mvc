@@ -21,8 +21,8 @@ public class CustomerDTO {
 
     @Column
     private String email;
-    
+
     private Integer version;
     private LocalDateTime createdDate;
-    private LocalDateTime lastModifiedDate;
+    private LocalDateTime updateDate;
 }

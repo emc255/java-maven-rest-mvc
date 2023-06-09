@@ -73,8 +73,8 @@ public class CustomerServiceJPA implements CustomerService {
     public Optional<CustomerDTO> patchCustomerById(UUID id, CustomerDTO customerDTO) {
         AtomicReference<Optional<CustomerDTO>> atomicReference = new AtomicReference<>();
         customerRepository.findById(id).ifPresentOrElse(updateCustomer -> {
-            Optional.ofNullable(customerDTO.getName()).ifPresent(updateCustomer::setName);
-            updateCustomer.setLastModifiedDate(LocalDateTime.now());
+            Optional.of(customerDTO.getName()).ifPresent(updateCustomer::setName);
+            updateCustomer.setUpdateDate(LocalDateTime.now());
             customerRepository.save(updateCustomer);
             CustomerDTO updateCustomerDTO = customerMapper.convertCustomerToCustomerDTO(updateCustomer);
             atomicReference.set(Optional.of(updateCustomerDTO));

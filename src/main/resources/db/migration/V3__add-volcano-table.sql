@@ -8,5 +8,7 @@ CREATE TABLE volcano (
     elevation INTEGER,
     type VARCHAR(255),
     status VARCHAR(255),
+    created_date datetime(6),
+    update_date datetime(6),
     PRIMARY KEY (id)
 ) ENGINE=InnoDB;

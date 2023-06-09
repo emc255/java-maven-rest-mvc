@@ -16,7 +16,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .name("AI")
                 .version(1)
                 .createdDate(LocalDateTime.now())
-                .lastModifiedDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
                 .build();
 
         CustomerDTO customer2 = CustomerDTO.builder()
@@ -24,7 +24,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .name("IU")
                 .version(1)
                 .createdDate(LocalDateTime.now())
-                .lastModifiedDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
                 .build();
 
         CustomerDTO customer3 = CustomerDTO.builder()
@@ -32,7 +32,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .name("Jessica")
                 .version(1)
                 .createdDate(LocalDateTime.now())
-                .lastModifiedDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
                 .build();
 
         data.put(customer1.getId(), customer1);
@@ -57,7 +57,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .name(customerDTO.getName())
                 .version(1)
                 .createdDate(LocalDateTime.now())
-                .lastModifiedDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
                 .build();
         data.put(savedCustomer.getId(), savedCustomer);
         return savedCustomer;
@@ -67,7 +67,7 @@ public class CustomerServiceImpl implements CustomerService {
     public Optional<CustomerDTO> updateCustomerById(UUID id, CustomerDTO customerDTO) {
         CustomerDTO updatedCustomer = data.get(id);
         updatedCustomer.setName(customerDTO.getName());
-        updatedCustomer.setLastModifiedDate(LocalDateTime.now());
+        updatedCustomer.setUpdateDate(LocalDateTime.now());
         return Optional.of(updatedCustomer);
     }
 
@@ -81,7 +81,7 @@ public class CustomerServiceImpl implements CustomerService {
     public Optional<CustomerDTO> patchCustomerById(UUID id, CustomerDTO customerDTO) {
         CustomerDTO updatedCustomer = data.get(id);
         if (customerDTO.getName() != null) updatedCustomer.setName(customerDTO.getName());
-        updatedCustomer.setLastModifiedDate(LocalDateTime.now());
+        updatedCustomer.setUpdateDate(LocalDateTime.now());
         return Optional.of(updatedCustomer);
     }
 }
