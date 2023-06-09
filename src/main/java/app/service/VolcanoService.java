@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface VolcanoService {
 
-    List<VolcanoDTO> volcanoList(String country, String region);
+    List<VolcanoDTO> volcanoList(String country, String region, Integer pageNumber, Integer pageSize);
 
     Optional<VolcanoDTO> getVolcanoById(UUID id);
 

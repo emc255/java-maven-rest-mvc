@@ -1,24 +1,21 @@
 package app.controller;
 
 import app.mapper.VolcanoMapper;
-import app.model.VolcanoDTO;
 import app.repository.VolcanoRepository;
+import app.service.VolcanoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.List;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @SpringBootTest
@@ -27,6 +24,8 @@ class VolcanoControllerTest {
     VolcanoController volcanoController;
     @Autowired
     VolcanoRepository volcanoRepository;
+    @Autowired
+    VolcanoService volcanoService;
     @Autowired
     VolcanoMapper mapper;
 
@@ -43,9 +42,14 @@ class VolcanoControllerTest {
     }
 
     @Test
-    void testVolcanoList() {
-        List<VolcanoDTO> volcanoDTOList = volcanoController.volcanoList(null, null);
-        assertThat(volcanoDTOList.size()).isEqualTo(1571);
+    void testVolcanoList() throws Exception {
+
+        mockMvc.perform(get(VolcanoController.VOLCANO_PATH)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()", is(1571)));
+
     }
 
     @Test
@@ -71,6 +75,17 @@ class VolcanoControllerTest {
                         .queryParam("region", "Cape"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", is(3)));
+    }
+
+    @Test
+    void testVolcanoListByCountryAndRegion_WhenPageNumberIsGreaterThan1_ExpectedSizeNotEmpty() throws Exception {
+        mockMvc.perform(get(VolcanoController.VOLCANO_PATH)
+                        .queryParam("country", "States")
+                        .queryParam("region", "")
+                        .queryParam("pageNumber", "2")
+                        .queryParam("pageSize", "50"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(50)));
     }
 
 
