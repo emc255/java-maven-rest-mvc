@@ -43,12 +43,22 @@ class VolcanoControllerTest {
 
     @Test
     void testVolcanoList() throws Exception {
-
         mockMvc.perform(get(VolcanoController.VOLCANO_PATH)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()", is(1571)));
+                .andExpect(jsonPath("$.content.length()", is(25)));
+
+    }
+
+    @Test
+    void testVolcanoList_WhenPageSizeIsGreaterThan1000_ExpectedSize1000() throws Exception {
+        mockMvc.perform(get(VolcanoController.VOLCANO_PATH)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .queryParam("pageSize", "2000"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.content.length()", is(1000)));
 
     }
 
@@ -58,7 +68,7 @@ class VolcanoControllerTest {
                         .queryParam("country", "Guatemala")
                         .queryParam("region", "Guatemala"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()", is(22)));
+                .andExpect(jsonPath("$.content.size()", is(22)));
     }
 
     @Test
@@ -66,7 +76,7 @@ class VolcanoControllerTest {
         mockMvc.perform(get(VolcanoController.VOLCANO_PATH)
                         .queryParam("country", "States"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()", is(184)));
+                .andExpect(jsonPath("$.content.size()", is(25)));
     }
 
     @Test
@@ -74,7 +84,7 @@ class VolcanoControllerTest {
         mockMvc.perform(get(VolcanoController.VOLCANO_PATH)
                         .queryParam("region", "Cape"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()", is(3)));
+                .andExpect(jsonPath("$.content.size()", is(3)));
     }
 
     @Test
@@ -85,7 +95,7 @@ class VolcanoControllerTest {
                         .queryParam("pageNumber", "2")
                         .queryParam("pageSize", "50"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()", is(50)));
+                .andExpect(jsonPath("$.content.size()", is(50)));
     }
 
 

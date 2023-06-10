@@ -4,13 +4,13 @@ import app.exception.NotFoundException;
 import app.model.VolcanoDTO;
 import app.service.VolcanoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -23,7 +23,7 @@ public class VolcanoController {
 
 
     @GetMapping({VOLCANO_PATH, VOLCANO_PATH + "/"})
-    public List<VolcanoDTO> volcanoList(@RequestParam(required = false) String country,
+    public Page<VolcanoDTO> volcanoList(@RequestParam(required = false) String country,
                                         @RequestParam(required = false) String region,
                                         @RequestParam(required = false) Integer pageNumber, Integer pageSize) {
         return volcanoService.volcanoList(country, region, pageNumber, pageSize);
