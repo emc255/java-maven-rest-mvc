@@ -2,7 +2,7 @@ package app.repository;
 
 import app.bootstrap.BootstrapData;
 import app.entity.Volcano;
-import app.service.VolcanoCSVImpl;
+import app.service.CSVDataToDatabaseImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -12,7 +12,7 @@ import org.springframework.data.domain.Page;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Import({BootstrapData.class, VolcanoCSVImpl.class})
+@Import({BootstrapData.class, CSVDataToDatabaseImpl.class})
 class VolcanoRepositoryTest {
     @Autowired
     VolcanoRepository volcanoRepository;

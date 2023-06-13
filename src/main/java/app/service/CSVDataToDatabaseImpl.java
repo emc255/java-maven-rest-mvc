@@ -1,5 +1,6 @@
 package app.service;
 
+import app.model.EarthquakeCSV;
 import app.model.VolcanoDTO;
 import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.stereotype.Service;
@@ -10,12 +11,26 @@ import java.io.FileReader;
 import java.util.List;
 
 @Service
-public class VolcanoCSVImpl implements VolcanoCSV {
+public class CSVDataToDatabaseImpl implements CSVDataToDatabase {
     @Override
-    public List<VolcanoDTO> convertCSV(File csvFile) {
+    public List<VolcanoDTO> volcanoCSV(File csvFile) {
         try {
             return new CsvToBeanBuilder<VolcanoDTO>(new FileReader(csvFile))
                     .withType(VolcanoDTO.class)
+                    .build()
+                    .parse();
+        } catch (FileNotFoundException w) {
+            throw new RuntimeException();
+        }
+
+    }
+
+    @Override
+    public List<EarthquakeCSV> earthquakeCSV(File csvFile) {
+
+        try {
+            return new CsvToBeanBuilder<EarthquakeCSV>(new FileReader(csvFile))
+                    .withType(EarthquakeCSV.class)
                     .build()
                     .parse();
         } catch (FileNotFoundException w) {

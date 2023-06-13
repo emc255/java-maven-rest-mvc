@@ -37,6 +37,4 @@ public class Customer {
 
     @UpdateTimestamp
     private LocalDateTime updateDate;
-
-
 }

@@ -2,13 +2,16 @@ package app.bootstrap;
 
 import app.entity.Customer;
 import app.entity.Dog;
+import app.entity.Earthquake;
 import app.entity.Volcano;
 import app.model.DogBreed;
+import app.model.EarthquakeCSV;
 import app.model.VolcanoDTO;
 import app.repository.CustomerRepository;
 import app.repository.DogRepository;
+import app.repository.EarthquakeRepository;
 import app.repository.VolcanoRepository;
-import app.service.VolcanoCSV;
+import app.service.CSVDataToDatabase;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -18,6 +21,8 @@ import org.springframework.util.ResourceUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -28,7 +33,8 @@ public class BootstrapData implements CommandLineRunner {
     private final DogRepository dogRepository;
     private final CustomerRepository customerRepository;
     private final VolcanoRepository volcanoRepository;
-    private final VolcanoCSV volcanoCSV;
+    private final EarthquakeRepository earthquakeRepository;
+    private final CSVDataToDatabase CSVDataToDatabase;
 
 
     @Override
@@ -37,6 +43,7 @@ public class BootstrapData implements CommandLineRunner {
         loadDogData();
         loadCustomerDate();
         loadVolcano();
+        loadEarthquake();
     }
 
     private void loadDogData() {
@@ -94,7 +101,7 @@ public class BootstrapData implements CommandLineRunner {
     private void loadVolcano() throws FileNotFoundException {
         volcanoRepository.deleteAll();
         File file = ResourceUtils.getFile("classpath:csv-data/volcano_db.csv");
-        List<VolcanoDTO> volcanoDTOList = volcanoCSV.convertCSV(file);
+        List<VolcanoDTO> volcanoDTOList = CSVDataToDatabase.volcanoCSV(file);
         for (VolcanoDTO volcanoDTO : volcanoDTOList) {
             Volcano volcano = Volcano.builder()
                     .name(volcanoDTO.getName())
@@ -109,5 +116,40 @@ public class BootstrapData implements CommandLineRunner {
             volcanoRepository.save(volcano);
         }
 
+    }
+
+    private void loadEarthquake() throws FileNotFoundException {
+        earthquakeRepository.deleteAll();
+        File file = ResourceUtils.getFile("classpath:csv-data/earthquakes.csv");
+        List<EarthquakeCSV> earthquakeCSVList = CSVDataToDatabase.earthquakeCSV(file);
+
+        for (EarthquakeCSV earthquakeCSV : earthquakeCSVList) {
+            Earthquake earthquake = Earthquake.builder()
+                    .eruptionDate(createLocalDateTime(earthquakeCSV.getEruptionDate()))
+                    .latitude(earthquakeCSV.getLatitude())
+                    .longitude(earthquakeCSV.getLongitude())
+                    .magnitude(earthquakeCSV.getMagnitude())
+                    .build();
+            earthquakeRepository.save(earthquake);
+        }
+    }
+
+    private LocalDateTime createLocalDateTime(String date) {
+        Random random = new Random();
+
+        int hr = random.nextInt(24);
+        String hrString = hr >= 10 ? String.valueOf(hr) : "0" + hr;
+        random = new Random();
+        int minute = random.nextInt(60);
+        String minuteString = minute >= 10 ? String.valueOf(minute) : "0" + minute;
+        random = new Random();
+        int sec = random.nextInt(60);
+        String secString = sec >= 10 ? String.valueOf(sec) : "0" + sec;
+
+        date = date + " " + hrString + ":" + minuteString + ":" + secString;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+
+        return LocalDateTime.parse(date, formatter);
     }
 }

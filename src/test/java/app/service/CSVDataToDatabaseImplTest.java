@@ -11,14 +11,14 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-class VolcanoCSVImplTest {
+class CSVDataToDatabaseImplTest {
     @Autowired
-    VolcanoCSV volcanoCSV = new VolcanoCSVImpl();
+    CSVDataToDatabase CSVDataToDatabase = new CSVDataToDatabaseImpl();
 
     @Test
     void convertCSV() throws FileNotFoundException {
         File file = ResourceUtils.getFile("classpath:csv-data/volcano_db.csv");
-        List<VolcanoDTO> volcanoDTOList = volcanoCSV.convertCSV(file);
+        List<VolcanoDTO> volcanoDTOList = CSVDataToDatabase.volcanoCSV(file);
         System.out.println(volcanoDTOList.size());
         assertThat(volcanoDTOList.size()).isGreaterThan(0);
     }
