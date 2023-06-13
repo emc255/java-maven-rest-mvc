@@ -13,10 +13,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
-
 
 @Service
 @Primary
@@ -30,9 +32,9 @@ public class VolcanoServiceImpl implements VolcanoService {
     private final VolcanoMapper volcanoMapper;
 
     @Override
-    public Page<VolcanoDTO> volcanoList(String country, String region, Integer pageNumber, Integer pageSize) {
+    public Page<VolcanoDTO> volcanoList(String country, String region, Integer pageNumber, Integer pageSize, String sortName) {
         Page<Volcano> volcanoList;
-        PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
+        PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortName);
         if (StringUtils.hasText(country) && StringUtils.hasText(region)) {
             volcanoList = volcanoListByCountryAndRegion(country, region, pageRequest);
         } else if (StringUtils.hasText(country) && !StringUtils.hasText(region)) {
@@ -96,13 +98,17 @@ public class VolcanoServiceImpl implements VolcanoService {
         return volcanoRepository.findAllByRegionIsLikeIgnoreCase(addWildCard(region), pageable);
     }
 
-    private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
+    private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize, String sortName) {
         int queryPageNumber = pageNumber != null && pageNumber > 0 ? pageNumber - 1 : DEFAULT_PAGE_NUMBER;
         int queryPageSize = pageSize != null && pageSize > 0
                 ? pageSize > 1000 ? 1000 : pageSize
                 : DEFAULT_PAGE_SIZE;
 
-        Sort sort = Sort.by(Sort.Order.asc("name"));
+        List<String> properties = Arrays.stream(Volcano.class.getDeclaredFields())
+                .map(Field::getName)
+                .toList();
+        sortName = properties.contains(sortName) ? sortName : "name";
+        Sort sort = Sort.by(Sort.Order.asc(sortName));
         return PageRequest.of(queryPageNumber, queryPageSize, sort);
     }
 
