@@ -25,8 +25,10 @@ public class VolcanoController {
     @GetMapping({VOLCANO_PATH, VOLCANO_PATH + "/"})
     public Page<VolcanoDTO> volcanoList(@RequestParam(required = false) String country,
                                         @RequestParam(required = false) String region,
-                                        @RequestParam(required = false) Integer pageNumber, Integer pageSize) {
-        return volcanoService.volcanoList(country, region, pageNumber, pageSize);
+                                        @RequestParam(required = false) Integer pageNumber,
+                                        @RequestParam(required = false) Integer pageSize,
+                                        @RequestParam(required = false) String sortName) {
+        return volcanoService.volcanoList(country, region, pageNumber, pageSize, sortName);
     }
 
     @GetMapping(VOLCANO_PATH_ID)
