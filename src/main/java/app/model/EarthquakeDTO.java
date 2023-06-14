@@ -15,8 +15,7 @@ import java.util.UUID;
 public class EarthquakeDTO {
 
     private UUID id;
-
-
+    
     private LocalDateTime eruptionDate;
 
     private Double latitude;

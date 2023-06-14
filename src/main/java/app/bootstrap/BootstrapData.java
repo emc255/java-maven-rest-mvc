@@ -107,8 +107,8 @@ public class BootstrapData implements CommandLineRunner {
                     .name(volcanoDTO.getName())
                     .country(volcanoDTO.getCountry())
                     .region(volcanoDTO.getRegion())
-                    .latitude(volcanoDTO.getLatitude())
-                    .longitude(volcanoDTO.getLongitude())
+                    .latitude(Math.round(volcanoDTO.getLatitude() * 100.0) / 100.0)
+                    .longitude(Math.round(volcanoDTO.getLongitude() * 100.0) / 100.0)
                     .elevation(volcanoDTO.getElevation())
                     .type(volcanoDTO.getType())
                     .status(volcanoDTO.getStatus())
@@ -126,8 +126,8 @@ public class BootstrapData implements CommandLineRunner {
         for (EarthquakeCSV earthquakeCSV : earthquakeCSVList) {
             Earthquake earthquake = Earthquake.builder()
                     .eruptionDate(createLocalDateTime(earthquakeCSV.getEruptionDate()))
-                    .latitude(earthquakeCSV.getLatitude())
-                    .longitude(earthquakeCSV.getLongitude())
+                    .latitude(Math.round(earthquakeCSV.getLatitude() * 100.0) / 100.0)
+                    .longitude(Math.round(earthquakeCSV.getLongitude() * 100.0) / 100.0)
                     .magnitude(earthquakeCSV.getMagnitude())
                     .build();
             earthquakeRepository.save(earthquake);
