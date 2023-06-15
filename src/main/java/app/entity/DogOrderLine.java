@@ -23,22 +23,6 @@ public class DogOrderLine {
     @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;
 
-    @Column(name = "dog_id",
-            length = 36,
-            columnDefinition = "varchar(36)",
-            updatable = false,
-            nullable = false)
-    @JdbcTypeCode(SqlTypes.CHAR)
-    private UUID dogId;
-
-    @Column(name = "dog_order_id",
-            length = 36,
-            columnDefinition = "varchar(36)",
-            updatable = false,
-            nullable = false)
-    @JdbcTypeCode(SqlTypes.CHAR)
-    private UUID dogOrderId;
-
     @Version
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer version;
@@ -56,4 +40,10 @@ public class DogOrderLine {
     @Column(name = "update_date")
     @UpdateTimestamp
     private LocalDateTime updateDate;
+
+    @ManyToOne
+    private Dog dog;
+
+    @ManyToOne
+    private DogOrder dogOrder;
 }

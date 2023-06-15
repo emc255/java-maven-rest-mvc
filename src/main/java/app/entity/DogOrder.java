@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -24,11 +25,6 @@ public class DogOrder {
     @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;
 
-
-    @Column(name = "customer_id", length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
-    @JdbcTypeCode(SqlTypes.CHAR)
-    private UUID customerId;
-
     @Version
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer version;
@@ -41,4 +37,9 @@ public class DogOrder {
     @UpdateTimestamp
     private LocalDateTime updateDate;
 
+    @ManyToOne
+    private Customer customer;
+
+    @OneToMany(mappedBy = "dogOrder")
+    private Set<DogOrderLine> dogOrderLines;
 }

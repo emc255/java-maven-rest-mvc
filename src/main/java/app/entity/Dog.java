@@ -12,6 +12,7 @@ import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -68,4 +69,6 @@ public class Dog {
     @UpdateTimestamp
     private LocalDateTime updateDate;
 
+    @OneToMany(mappedBy = "dog")
+    private Set<DogOrderLine> dogOrderLines;
 }
