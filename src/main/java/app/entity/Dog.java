@@ -1,6 +1,5 @@
 package app.entity;
 
-import app.model.DogBreed;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -39,7 +38,17 @@ public class Dog {
     private String name;
 
     @NotNull
-    private DogBreed dogBreed;
+    @Size(max = 100)
+    @Column(length = 100)
+    private String breed;
+
+    @Size(max = 50)
+    @Column(length = 50)
+    private String sex;
+
+    @Size(max = 50)
+    @Column(length = 50)
+    private String color;
 
     @NotBlank
     @NotNull

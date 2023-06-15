@@ -1,7 +1,8 @@
 package app.service;
 
-import app.model.EarthquakeCSV;
 import app.model.VolcanoDTO;
+import app.model_csv.DogCSV;
+import app.model_csv.EarthquakeCSV;
 import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.stereotype.Service;
 
@@ -37,5 +38,17 @@ public class CSVDataToDatabaseImpl implements CSVDataToDatabase {
             throw new RuntimeException();
         }
 
+    }
+
+    @Override
+    public List<DogCSV> dogNames(File csvFile) {
+        try {
+            return new CsvToBeanBuilder<DogCSV>(new FileReader(csvFile))
+                    .withType(DogCSV.class)
+                    .build()
+                    .parse();
+        } catch (FileNotFoundException w) {
+            throw new RuntimeException();
+        }
     }
 }

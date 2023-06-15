@@ -24,7 +24,11 @@ public class DogDTO {
     private String name;
 
     @NotNull
-    private DogBreed dogBreed;
+    private String breed;
+
+    private String sex;
+
+    private String color;
 
     @NotNull
     @NotBlank

@@ -1,26 +1,26 @@
+DROP TABLE if EXISTS customer;
+DROP TABLE if EXISTS dog;
 
-    drop table if exists customer;
-
-    drop table if exists dog;
-
-    create table customer (
-        version integer,
-        created_date datetime(6),
-        update_date datetime(6),
-        id varchar(36) not null,
-        name varchar(255) not null,
-        primary key (id)
+CREATE TABLE customer (
+    version INTEGER,
+    created_date datetime(6),
+    update_date datetime(6),
+    id VARCHAR(36) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
     ) engine=InnoDB;
 
-    create TABLE dog (
-        dog_breed tinyint not null check (dog_breed between 0 and 3),
-        price decimal(38,2) not null,
-        quantity_on_hand integer,
-        version integer,
-        created_date datetime(6),
-        update_date datetime(6),
-        id varchar(36) not null,
-        name varchar(50) not null,
-        upc varchar(100) not null,
-        primary key (id)
+CREATE TABLE dog (
+    breed VARCHAR(100),
+    price DECIMAL(38,2) NOT NULL,
+    quantity_on_hand INTEGER,
+    version INTEGER,
+    created_date datetime(6),
+    update_date datetime(6),
+    id VARCHAR(36) NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    color VARCHAR(50),
+    sex VARCHAR(50),
+    upc VARCHAR(100) NOT NULL,
+    PRIMARY KEY (id)
     ) engine=InnoDB;

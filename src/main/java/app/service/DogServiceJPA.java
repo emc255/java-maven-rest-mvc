@@ -51,7 +51,7 @@ public class DogServiceJPA implements DogService {
         AtomicReference<Optional<DogDTO>> atomicReference = new AtomicReference<>();
         dogRepository.findById(id).ifPresentOrElse(updateDog -> {
             updateDog.setName(dogDTO.getName());
-            updateDog.setDogBreed(dogDTO.getDogBreed());
+            updateDog.setBreed(dogDTO.getBreed());
             updateDog.setUpc(dogDTO.getUpc());
             updateDog.setQuantityOnHand(dogDTO.getQuantityOnHand());
             updateDog.setPrice(dogDTO.getPrice());
@@ -80,7 +80,7 @@ public class DogServiceJPA implements DogService {
         AtomicReference<Optional<DogDTO>> atomicReference = new AtomicReference<>();
         dogRepository.findById(id).ifPresentOrElse(updateDog -> {
             Optional.of(dogDTO.getName()).ifPresent(updateDog::setName);
-            Optional.of(dogDTO.getDogBreed()).ifPresent(updateDog::setDogBreed);
+            Optional.of(dogDTO.getBreed()).ifPresent(updateDog::setBreed);
             Optional.of(dogDTO.getUpc()).ifPresent(updateDog::setUpc);
             Optional.ofNullable(dogDTO.getQuantityOnHand()).ifPresent(updateDog::setQuantityOnHand);
             Optional.of(dogDTO.getPrice()).ifPresent(updateDog::setPrice);

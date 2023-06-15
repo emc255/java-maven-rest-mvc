@@ -1,7 +1,6 @@
 package app.repository;
 
 import app.entity.Dog;
-import app.model.DogBreed;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ class DogRepositoryTest {
     void testSaveDog() {
         Dog saveDog = dogRepository.save(Dog.builder()
                 .name("Brute")
-                .dogBreed(DogBreed.SHIBA_INU)
+                .breed("Shiba Inu")
                 .upc("21221")
                 .quantityOnHand(12)
                 .price(new BigDecimal("12.22"))
@@ -39,7 +38,7 @@ class DogRepositoryTest {
         assertThrows(ConstraintViolationException.class, () -> {
             Dog saveDog = dogRepository.save(Dog.builder()
                     .name("123456789101234567891012345678910123456789101234567891012345678910")
-                    .dogBreed(DogBreed.SHIBA_INU)
+                    .breed("Shiba Inu")
                     .upc("21221")
                     .quantityOnHand(12)
                     .price(new BigDecimal("12.22"))

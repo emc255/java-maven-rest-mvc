@@ -1,5 +1,7 @@
+DROP TABLE if EXISTS volcano;
+
 CREATE TABLE volcano (
-    id varchar(36) NOT NULL,
+    id VARCHAR(36) NOT NULL,
     name VARCHAR(255),
     country VARCHAR(255),
     region VARCHAR(255),

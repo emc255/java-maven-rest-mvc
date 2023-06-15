@@ -4,9 +4,8 @@ import app.entity.Customer;
 import app.entity.Dog;
 import app.entity.Earthquake;
 import app.entity.Volcano;
-import app.model.DogBreed;
-import app.model.EarthquakeCSV;
 import app.model.VolcanoDTO;
+import app.model_csv.EarthquakeCSV;
 import app.repository.CustomerRepository;
 import app.repository.DogRepository;
 import app.repository.EarthquakeRepository;
@@ -23,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -50,7 +50,7 @@ public class BootstrapData implements CommandLineRunner {
         dogRepository.deleteAll();
         Dog goldenRetriever = Dog.builder()
                 .name("Thor")
-                .dogBreed(DogBreed.ALASKAN_MALAMUTE)
+                .breed("Alaskan Malamute")
                 .upc(String.valueOf(new Random().nextInt(900000) + 100000))
                 .price(new BigDecimal("12.99"))
                 .quantityOnHand(122)
@@ -58,7 +58,7 @@ public class BootstrapData implements CommandLineRunner {
 
         Dog siberianHusky = Dog.builder()
                 .name("Chobo")
-                .dogBreed(DogBreed.SIBERIAN_HUSKY)
+                .breed("SIBERIAN_HUSKY")
                 .upc(String.valueOf(new Random().nextInt(900000) + 100000))
                 .price(new BigDecimal("11.99"))
                 .quantityOnHand(392)
@@ -66,7 +66,7 @@ public class BootstrapData implements CommandLineRunner {
 
         Dog alaskanMalamute = Dog.builder()
                 .name("Eva")
-                .dogBreed(DogBreed.GOLDEN_RETRIEVER)
+                .breed("Golden Retriever")
                 .upc(String.valueOf(new Random().nextInt(900000) + 100000))
                 .price(new BigDecimal("13.99"))
                 .quantityOnHand(144)
@@ -102,6 +102,7 @@ public class BootstrapData implements CommandLineRunner {
         volcanoRepository.deleteAll();
         File file = ResourceUtils.getFile("classpath:csv-data/volcano_db.csv");
         List<VolcanoDTO> volcanoDTOList = CSVDataToDatabase.volcanoCSV(file);
+        List<Volcano> volcanoList = new ArrayList<>();
         for (VolcanoDTO volcanoDTO : volcanoDTOList) {
             Volcano volcano = Volcano.builder()
                     .name(volcanoDTO.getName())
@@ -113,16 +114,17 @@ public class BootstrapData implements CommandLineRunner {
                     .type(volcanoDTO.getType())
                     .status(volcanoDTO.getStatus())
                     .build();
-            volcanoRepository.save(volcano);
-        }
+            volcanoList.add(volcano);
 
+        }
+        volcanoRepository.saveAll(volcanoList);
     }
 
     private void loadEarthquake() throws FileNotFoundException {
         earthquakeRepository.deleteAll();
         File file = ResourceUtils.getFile("classpath:csv-data/earthquakes.csv");
         List<EarthquakeCSV> earthquakeCSVList = CSVDataToDatabase.earthquakeCSV(file);
-
+        List<Earthquake> earthquakeList = new ArrayList<>();
         for (EarthquakeCSV earthquakeCSV : earthquakeCSVList) {
             Earthquake earthquake = Earthquake.builder()
                     .eruptionDate(createLocalDateTime(earthquakeCSV.getEruptionDate()))
@@ -130,8 +132,9 @@ public class BootstrapData implements CommandLineRunner {
                     .longitude(Math.round(earthquakeCSV.getLongitude() * 100.0) / 100.0)
                     .magnitude(earthquakeCSV.getMagnitude())
                     .build();
-            earthquakeRepository.save(earthquake);
+            earthquakeList.add(earthquake);
         }
+        earthquakeRepository.saveAll(earthquakeList);
     }
 
     private LocalDateTime createLocalDateTime(String date) {

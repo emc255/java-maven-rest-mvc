@@ -1,6 +1,5 @@
 package app.service;
 
-import app.model.DogBreed;
 import app.model.DogDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +24,7 @@ public class DogServiceImpl implements DogService {
                 .id(UUID.randomUUID())
                 .version(1)
                 .name("Whitey")
-                .dogBreed(DogBreed.ALASKAN_MALAMUTE)
+                .breed("Alaskan Malamute")
                 .upc("12356")
                 .price(new BigDecimal("12.99"))
                 .quantityOnHand(122)
@@ -37,7 +36,7 @@ public class DogServiceImpl implements DogService {
                 .id(UUID.randomUUID())
                 .version(1)
                 .name("Blacky")
-                .dogBreed(DogBreed.SIBERIAN_HUSKY)
+                .breed("Siberian Husky")
                 .upc("12356222")
                 .price(new BigDecimal("11.99"))
                 .quantityOnHand(392)
@@ -49,7 +48,7 @@ public class DogServiceImpl implements DogService {
                 .id(UUID.randomUUID())
                 .version(1)
                 .name("Browny")
-                .dogBreed(DogBreed.GOLDEN_RETRIEVER)
+                .breed("Golden Retriever")
                 .upc("12356")
                 .price(new BigDecimal("13.99"))
                 .quantityOnHand(144)
@@ -82,7 +81,7 @@ public class DogServiceImpl implements DogService {
                 .id(UUID.randomUUID())
                 .version(1)
                 .name(dogDTO.getName())
-                .dogBreed(dogDTO.getDogBreed())
+                .breed(dogDTO.getBreed())
                 .upc(dogDTO.getUpc())
                 .price(dogDTO.getPrice())
                 .quantityOnHand(dogDTO.getQuantityOnHand())
@@ -99,7 +98,7 @@ public class DogServiceImpl implements DogService {
     public Optional<DogDTO> updateDogById(UUID id, DogDTO dogDTO) {
         DogDTO updateDog = data.get(id);
         updateDog.setName(dogDTO.getName());
-        updateDog.setDogBreed(dogDTO.getDogBreed());
+        updateDog.setBreed(dogDTO.getBreed());
         updateDog.setUpc(dogDTO.getUpc());
         updateDog.setQuantityOnHand(dogDTO.getQuantityOnHand());
         updateDog.setPrice(dogDTO.getPrice());
@@ -119,7 +118,7 @@ public class DogServiceImpl implements DogService {
     public Optional<DogDTO> patchDogById(UUID id, DogDTO dogDTO) {
         DogDTO updateDog = data.get(id);
         updateDog.setName(dogDTO.getName());
-        updateDog.setDogBreed(dogDTO.getDogBreed());
+        updateDog.setBreed(dogDTO.getBreed());
         updateDog.setUpc(dogDTO.getUpc());
         if (dogDTO.getQuantityOnHand() != null) updateDog.setQuantityOnHand(dogDTO.getQuantityOnHand());
         updateDog.setPrice(dogDTO.getPrice());

@@ -3,7 +3,6 @@ package app.controller;
 import app.entity.Dog;
 import app.exception.NotFoundException;
 import app.mapper.DogMapper;
-import app.model.DogBreed;
 import app.model.DogDTO;
 import app.repository.DogRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -86,7 +85,7 @@ class DogControllerIntegrationTest {
     void testAddDog() {
         DogDTO dogDTO = DogDTO.builder()
                 .name("pika")
-                .dogBreed(DogBreed.GOLDEN_RETRIEVER)
+                .breed("Golden Retriever")
                 .price(new BigDecimal("11.11"))
                 .build();
         ResponseEntity<Void> responseEntity = dogController.addDog(dogDTO);
@@ -109,7 +108,7 @@ class DogControllerIntegrationTest {
         dogDTO.setId(null);
         dogDTO.setVersion(null);
         dogDTO.setName("Sukoshi");
-        dogDTO.setDogBreed(DogBreed.SHIBA_INU);
+        dogDTO.setBreed("Shiba Inu");
 
         ResponseEntity<Void> responseEntity = dogController.updateDogById(dog.getId(), dogDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
@@ -117,7 +116,7 @@ class DogControllerIntegrationTest {
         Dog testUpdateDog = dogRepository.findById(dog.getId()).orElse(null);
         assertThat(testUpdateDog).isNotNull();
         assertThat(testUpdateDog.getName()).isEqualTo("Sukoshi");
-        assertThat(testUpdateDog.getDogBreed()).isEqualTo(DogBreed.SHIBA_INU);
+        assertThat(testUpdateDog.getBreed()).isEqualTo("Shiba Inu");
     }
 
     @Test
@@ -151,7 +150,7 @@ class DogControllerIntegrationTest {
         UUID dogId = dogRepository.findAll().get(0).getId();
         Dog dog = Dog.builder()
                 .name("Cupid")
-                .dogBreed(DogBreed.GOLDEN_RETRIEVER)
+                .breed("Golden Retriever")
                 .upc("1221")
                 .price(new BigDecimal("11.22"))
                 .build();
@@ -178,7 +177,7 @@ class DogControllerIntegrationTest {
         UUID dogId = dogRepository.findAll().get(0).getId();
         Dog dog = Dog.builder()
                 .name("123456789101234567891012345678910123456789101234567891012345678910")
-                .dogBreed(DogBreed.GOLDEN_RETRIEVER)
+                .breed("Golden Retriever")
                 .upc("1221")
                 .price(new BigDecimal("11.22"))
                 .build();

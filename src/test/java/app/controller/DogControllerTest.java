@@ -104,7 +104,7 @@ class DogControllerTest {
     void testAddDogFieldNull() throws Exception {
         DogDTO dogDTO = DogDTO.builder()
                 .name(null)
-                .dogBreed(null)
+                .breed(null)
                 .upc(null)
                 .price(null)
                 .build();
