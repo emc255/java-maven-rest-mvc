@@ -53,7 +53,7 @@ class DogControllerIntegrationTest {
     @Test
     void testDogList() throws Exception {
         List<DogDTO> testDogList = dogController.dogList();
-        assertThat(testDogList.size()).isEqualTo(3);
+        assertThat(testDogList.size()).isEqualTo(5615);
     }
 
     @Test
@@ -135,7 +135,7 @@ class DogControllerIntegrationTest {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
         assertThat(dogRepository.findById(dogId)).isEmpty();
         List<Dog> dogList = dogRepository.findAll();
-        assertThat(dogList.size()).isEqualTo(2);
+        assertThat(dogList.size()).isEqualTo(5614);
     }
 
     @Test

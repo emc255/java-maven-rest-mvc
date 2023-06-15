@@ -5,6 +5,7 @@ import app.entity.Dog;
 import app.entity.Earthquake;
 import app.entity.Volcano;
 import app.model.VolcanoDTO;
+import app.model_csv.DogCSV;
 import app.model_csv.EarthquakeCSV;
 import app.repository.CustomerRepository;
 import app.repository.DogRepository;
@@ -46,33 +47,51 @@ public class BootstrapData implements CommandLineRunner {
         loadEarthquake();
     }
 
-    private void loadDogData() {
+    private void loadDogData() throws FileNotFoundException {
         dogRepository.deleteAll();
-        Dog goldenRetriever = Dog.builder()
-                .name("Thor")
-                .breed("Alaskan Malamute")
-                .upc(String.valueOf(new Random().nextInt(900000) + 100000))
-                .price(new BigDecimal("12.99"))
-                .quantityOnHand(122)
-                .build();
+        File file = ResourceUtils.getFile("classpath:csv-data/dogs.csv");
+        List<DogCSV> dogCSVList = CSVDataToDatabase.dogCSV(file);
+        List<Dog> dogList = new ArrayList<>();
 
-        Dog siberianHusky = Dog.builder()
-                .name("Chobo")
-                .breed("SIBERIAN_HUSKY")
-                .upc(String.valueOf(new Random().nextInt(900000) + 100000))
-                .price(new BigDecimal("11.99"))
-                .quantityOnHand(392)
-                .build();
+        for (DogCSV dogCSV : dogCSVList) {
+            Dog dog = Dog.builder()
+                    .name(createName(dogCSV.getName()))
+                    .breed(dogCSV.getName())
+                    .color(dogCSV.getColour())
+                    .sex(dogCSV.getSex())
+                    .upc(String.valueOf(new Random().nextInt(900000) + 100000))
+                    .price(createPrice())
+                    .quantityOnHand(new Random().nextInt(10, 1000))
+                    .build();
+            dogList.add(dog);
 
-        Dog alaskanMalamute = Dog.builder()
-                .name("Eva")
-                .breed("Golden Retriever")
-                .upc(String.valueOf(new Random().nextInt(900000) + 100000))
-                .price(new BigDecimal("13.99"))
-                .quantityOnHand(144)
-                .build();
+        }
+        dogRepository.saveAll(dogList);
+//        Dog goldenRetriever = Dog.builder()
+//                .name("Thor")
+//                .breed("Alaskan Malamute")
+//                .upc(String.valueOf(new Random().nextInt(900000) + 100000))
+//                .price(new BigDecimal("12.99"))
+//                .quantityOnHand(122)
+//                .build();
+//
+//        Dog siberianHusky = Dog.builder()
+//                .name("Chobo")
+//                .breed("SIBERIAN_HUSKY")
+//                .upc(String.valueOf(new Random().nextInt(900000) + 100000))
+//                .price(new BigDecimal("11.99"))
+//                .quantityOnHand(392)
+//                .build();
+//
+//        Dog alaskanMalamute = Dog.builder()
+//                .name("Eva")
+//                .breed("Golden Retriever")
+//                .upc(String.valueOf(new Random().nextInt(900000) + 100000))
+//                .price(new BigDecimal("13.99"))
+//                .quantityOnHand(144)
+//                .build();
 
-        dogRepository.saveAll(Arrays.asList(goldenRetriever, siberianHusky, alaskanMalamute));
+        //     dogRepository.saveAll(Arrays.asList(goldenRetriever, siberianHusky, alaskanMalamute));
     }
 
     private void loadCustomerDate() {
@@ -154,5 +173,16 @@ public class BootstrapData implements CommandLineRunner {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
 
         return LocalDateTime.parse(date, formatter);
+    }
+
+    private BigDecimal createPrice() {
+        int hundreds = new Random().nextInt(100, 1200);
+        int decimal = new Random().nextInt(0, 99);
+        String price = hundreds + "." + decimal;
+        return new BigDecimal(price);
+    }
+
+    private String createName(String name) {
+        return name.isEmpty() ? "Unknown" : name;
     }
 }

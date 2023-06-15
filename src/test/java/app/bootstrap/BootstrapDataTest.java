@@ -39,7 +39,7 @@ class BootstrapDataTest {
     @Test
     void testLoadData() throws Exception {
         bootstrapData.run((String) null);
-        assertThat(dogRepository.count()).isEqualTo(3);
+        assertThat(dogRepository.count()).isEqualTo(5615);
         assertThat(customerRepository.count()).isEqualTo(3);
     }
 }

@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DogCSV {
+    
     @CsvBindByName
     private String name;
 

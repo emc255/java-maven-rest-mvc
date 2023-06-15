@@ -12,5 +12,5 @@ public interface CSVDataToDatabase {
 
     List<EarthquakeCSV> earthquakeCSV(File csvFile);
 
-    List<DogCSV> dogNames(File csvFile);
+    List<DogCSV> dogCSV(File csvFile);
 }

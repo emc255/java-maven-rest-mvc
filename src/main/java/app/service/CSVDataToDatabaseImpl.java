@@ -41,7 +41,7 @@ public class CSVDataToDatabaseImpl implements CSVDataToDatabase {
     }
 
     @Override
-    public List<DogCSV> dogNames(File csvFile) {
+    public List<DogCSV> dogCSV(File csvFile) {
         try {
             return new CsvToBeanBuilder<DogCSV>(new FileReader(csvFile))
                     .withType(DogCSV.class)
