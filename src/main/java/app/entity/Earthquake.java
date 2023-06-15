@@ -25,7 +25,7 @@ public class Earthquake {
     @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;
 
-    @Column(name = "eruption-date")
+    @Column(name = "eruption_date")
     private LocalDateTime eruptionDate;
 
     private Double latitude;
