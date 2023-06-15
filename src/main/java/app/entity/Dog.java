@@ -60,9 +60,11 @@ public class Dog {
     @NotNull
     private BigDecimal price;
 
+    @Column(name = "created_date", updatable = false)
     @CreationTimestamp
     private LocalDateTime createdDate;
 
+    @Column(name = "update_date")
     @UpdateTimestamp
     private LocalDateTime updateDate;
 

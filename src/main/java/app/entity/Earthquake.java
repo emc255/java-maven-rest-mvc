@@ -1,9 +1,6 @@
 package app.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -24,6 +21,10 @@ public class Earthquake {
     @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
     @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;
+
+    @Version
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer version;
 
     @Column(name = "eruption_date")
     private LocalDateTime eruptionDate;

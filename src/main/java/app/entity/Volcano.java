@@ -1,9 +1,6 @@
 package app.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -27,6 +24,10 @@ public class Volcano {
     @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;
 
+    @Version
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer version;
+
     private String name;
     private String country;
     private String region;
@@ -36,9 +37,11 @@ public class Volcano {
     private String type;
     private String status;
 
+    @Column(name = "created_date", updatable = false)
     @CreationTimestamp
     private LocalDateTime createdDate;
 
+    @Column(name = "update_date")
     @UpdateTimestamp
     private LocalDateTime updateDate;
 }

@@ -15,6 +15,7 @@ import java.util.UUID;
 @Builder
 public class DogDTO {
     private UUID id;
+
     private Integer version;
 
     @NotNull

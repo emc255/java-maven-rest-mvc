@@ -19,6 +19,8 @@ public class VolcanoDTO {
 
     private UUID id;
 
+    private Integer version;
+    
     @CsvBindByName
     @NotNull
     @NotBlank

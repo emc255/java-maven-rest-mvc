@@ -2,6 +2,7 @@ DROP TABLE if EXISTS volcano;
 
 CREATE TABLE volcano (
     id VARCHAR(36) NOT NULL,
+    version INTEGER,
     name VARCHAR(255),
     country VARCHAR(255),
     region VARCHAR(255),

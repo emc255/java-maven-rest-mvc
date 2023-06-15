@@ -11,26 +11,43 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Builder
-public class Customer {
+public class DogOrderLine {
     @Id
     @GeneratedValue(generator = "UUID")
     @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
     @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;
 
+    @Column(name = "dog_id",
+            length = 36,
+            columnDefinition = "varchar(36)",
+            updatable = false,
+            nullable = false)
+    @JdbcTypeCode(SqlTypes.CHAR)
+    private UUID dogId;
+
+    @Column(name = "dog_order_id",
+            length = 36,
+            columnDefinition = "varchar(36)",
+            updatable = false,
+            nullable = false)
+    @JdbcTypeCode(SqlTypes.CHAR)
+    private UUID dogOrderId;
+
     @Version
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer version;
 
-    private String name;
+    @Column(name = "order_quantity")
+    private int orderQuantity;
 
-    @Column
-    private String email;
+    @Column(name = "quantity_allocated")
+    private int quantityAllocated;
 
     @Column(name = "created_date", updatable = false)
     @CreationTimestamp
