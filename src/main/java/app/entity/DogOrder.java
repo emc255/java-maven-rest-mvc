@@ -28,6 +28,12 @@ public class DogOrder {
     @Version
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer version;
+    
+    @ManyToOne
+    private Customer customer;
+
+    @OneToMany(mappedBy = "dogOrder")
+    private Set<DogOrderLine> dogOrderLines;
 
     @Column(name = "created_date", updatable = false)
     @CreationTimestamp
@@ -36,10 +42,4 @@ public class DogOrder {
     @Column(name = "update_date")
     @UpdateTimestamp
     private LocalDateTime updateDate;
-
-    @ManyToOne
-    private Customer customer;
-
-    @OneToMany(mappedBy = "dogOrder")
-    private Set<DogOrderLine> dogOrderLines;
 }

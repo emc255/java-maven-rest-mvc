@@ -27,6 +27,12 @@ public class DogOrderLine {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer version;
 
+    @ManyToOne
+    private Dog dog;
+
+    @ManyToOne
+    private DogOrder dogOrder;
+
     @Column(name = "order_quantity")
     private int orderQuantity;
 
@@ -41,9 +47,5 @@ public class DogOrderLine {
     @UpdateTimestamp
     private LocalDateTime updateDate;
 
-    @ManyToOne
-    private Dog dog;
 
-    @ManyToOne
-    private DogOrder dogOrder;
 }

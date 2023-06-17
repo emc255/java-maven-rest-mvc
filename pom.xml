@@ -138,17 +138,6 @@
                     </compilerArgs>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-maven-plugin</artifactId>
-                <version>8.5.13</version>
-                <configuration>
-                    <user>admin</user>
-                    <password>password</password>
-                    <url>jdbc:mysql://127.0.0.1:3306/CanineClientDB</url>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 

@@ -18,7 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Customer {
+public class Category {
     @Id
     @GeneratedValue(generator = "UUID")
     @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
@@ -29,10 +29,14 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer version;
 
-    private String name;
+    @Builder.Default
+    @ManyToMany
+    @JoinTable(name = "dog_category",
+            joinColumns = @JoinColumn(name = "category_id"),
+            inverseJoinColumns = @JoinColumn(name = "dog_id"))
+    private Set<Dog> dogs = new HashSet<>();
 
-    @Column
-    private String email;
+    private String description;
 
     @Column(name = "created_date", updatable = false)
     @CreationTimestamp
@@ -41,9 +45,5 @@ public class Customer {
     @Column(name = "update_date")
     @UpdateTimestamp
     private LocalDateTime updateDate;
-
-    @Builder.Default
-    @OneToMany(mappedBy = "customer")
-    private Set<DogOrder> dogOrders = new HashSet<>();
 
 }

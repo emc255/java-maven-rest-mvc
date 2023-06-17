@@ -12,6 +12,7 @@ import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -71,4 +72,21 @@ public class Dog {
 
     @OneToMany(mappedBy = "dog")
     private Set<DogOrderLine> dogOrderLines;
+
+    @Builder.Default
+    @ManyToMany
+    @JoinTable(name = "dog_category",
+            joinColumns = @JoinColumn(name = "dog_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private Set<Category> categories = new HashSet<>();
+
+    public void addCategory(Category category) {
+        this.categories.add(category);
+        category.getDogs().add(this);
+    }
+
+    public void deleteCategory(Category category) {
+        this.categories.remove(category);
+        category.getDogs().remove(this);
+    }
 }
