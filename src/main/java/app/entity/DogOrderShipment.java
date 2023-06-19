@@ -8,17 +8,15 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
 @Getter
-public class DogOrder {
-
+@Setter
+public class DogOrderShipment {
     @Id
     @GeneratedValue(generator = "UUID")
     @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
@@ -29,14 +27,11 @@ public class DogOrder {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer version;
 
-    @ManyToOne
-    private Customer customer;
-
-    @OneToMany(mappedBy = "dogOrder")
-    private Set<DogOrderLine> dogOrderLines;
-
     @OneToOne
-    private DogOrderShipment dogOrderShipment;
+    private DogOrder dogOrder;
+
+    @Column(name = "tracking_number")
+    private String trackingNumber;
 
     @Column(name = "created_date", updatable = false)
     @CreationTimestamp
@@ -45,4 +40,5 @@ public class DogOrder {
     @Column(name = "update_date")
     @UpdateTimestamp
     private LocalDateTime updateDate;
+
 }

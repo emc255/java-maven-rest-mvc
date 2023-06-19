@@ -15,6 +15,6 @@ CREATE TABLE dog_category (
     dog_id VARCHAR(36) NOT NULL,
     category_id VARCHAR(36) NOT NULL,
     PRIMARY KEY (dog_id, category_id),
-    CONSTRAINT fk_dog_category_dog_id FOREIGN KEY (dog_id) REFERENCES dog (id),
-    CONSTRAINT fk_dog_category_category_id FOREIGN KEY (category_id) REFERENCES category (id)
+    CONSTRAINT dogCategory_fk_dogId FOREIGN KEY (dog_id) REFERENCES dog (id),
+    CONSTRAINT dogCategory_fk_categoryId FOREIGN KEY (category_id) REFERENCES category (id)
     ) engine=InnoDB;

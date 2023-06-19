@@ -21,6 +21,6 @@ CREATE TABLE dog_order_line (
     created_date datetime(6),
     update_date datetime(6),
     PRIMARY KEY (id),
-    CONSTRAINT fk_dog_order_line_dog_id FOREIGN KEY (dog_id) REFERENCES dog(id),
-    CONSTRAINT fk_dog_order_line_dog_order_id FOREIGN KEY (dog_order_id) REFERENCES dog_order(id)
+    CONSTRAINT dogOrderLine_fk_dogId FOREIGN KEY (dog_id) REFERENCES dog(id),
+    CONSTRAINT dogOrderLine_fk_dogOrderId FOREIGN KEY (dog_order_id) REFERENCES dog_order(id)
     ) engine=InnoDB;
