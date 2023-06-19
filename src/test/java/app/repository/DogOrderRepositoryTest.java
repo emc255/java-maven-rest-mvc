@@ -3,6 +3,7 @@ package app.repository;
 import app.entity.Customer;
 import app.entity.Dog;
 import app.entity.DogOrder;
+import app.entity.DogOrderShipment;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,8 +34,13 @@ class DogOrderRepositoryTest {
     @Test
     @Transactional
     void testDogOrder() {
+        DogOrderShipment dogOrderShipment = DogOrderShipment.builder()
+                .trackingNumber("1112211")
+                .build();
+
         DogOrder dogOrder = DogOrder.builder()
                 .customer(customer)
+                .dogOrderShipment(dogOrderShipment)
                 .build();
 
 

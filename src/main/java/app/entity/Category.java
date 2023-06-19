@@ -30,7 +30,7 @@ public class Category {
     private Integer version;
 
     @Builder.Default
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "dog_category",
             joinColumns = @JoinColumn(name = "category_id"),
             inverseJoinColumns = @JoinColumn(name = "dog_id"))

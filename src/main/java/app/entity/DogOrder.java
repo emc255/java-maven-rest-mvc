@@ -35,7 +35,7 @@ public class DogOrder {
     @OneToMany(mappedBy = "dogOrder")
     private Set<DogOrderLine> dogOrderLines;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     private DogOrderShipment dogOrderShipment;
 
     @Column(name = "created_date", updatable = false)

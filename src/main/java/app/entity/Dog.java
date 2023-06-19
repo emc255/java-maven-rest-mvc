@@ -74,7 +74,7 @@ public class Dog {
     private Set<DogOrderLine> dogOrderLines;
 
     @Builder.Default
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "dog_category",
             joinColumns = @JoinColumn(name = "dog_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
